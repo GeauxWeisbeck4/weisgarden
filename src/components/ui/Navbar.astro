@@ -3,7 +3,7 @@
   <div class="max-w-4xl w-full">
     <!-- Title area-->
     <div class="text-center mb-4">
-  <h1 class="text-xl"><strong class="bg-slate-950 text-white hover:text-teal-500 hover:underline border-s-2 border-slate-700 rounded-md px-4 py-2">WeisGarden</strong> - 🌿 Digital Garden by Andrew Weisbeck</h1> 
+  <h1 class="text-3xl"><strong class="bg-slate-950 text-white hover:text-teal-500 hover:underline border-s-2 border-slate-700 rounded-md px-4 py-2">WeisGarden</strong> - 🌿 Digital Garden by Andrew Weisbeck</h1> 
 </div>
 <!-- Bordered box matching width -->
 <div class="border border-black rounded-md px-4 py-4 mb-6 bg-slate-100">
@@ -62,7 +62,7 @@
 >
   <template x-for="(link, i) in navbarLinks" :key="link.path">
     <span>
-      <a class="inline-block px-3 py-2 hover:text-teal-600 transition-colors" :href="link.path" x-text="link.title"></a>
+      <a class="inline-block px-4 py-2 hover:text-teal-600 font-semibold transition-colors text-2xl" :href="link.path" x-text="link.title"></a>
         <template x-if="i != navbarLinks.length - 1">
           <strong class="text-black"> | </strong>
         </template>

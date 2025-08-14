@@ -4,13 +4,13 @@
    * For example, in JavaScript, the semi-colon (;) can be a commit character that accepts a suggestion and types that character.
    * Defaults to true.
    */
-  // "editor.acceptSuggestionOnCommitCharacter": true,
+  "editor.acceptSuggestionOnCommitCharacter": true,
   /**
    * Controls whether suggestions should be accepted on Enter, in addition to Tab. Helps to avoid ambiguity between inserting new lines or accepting suggestions.
    * Can be: 'on', 'off', or 'smart'.
    * Defaults to 'on'.
    */
-  // "editor.acceptSuggestionOnEnter": "on",
+  "editor.acceptSuggestionOnEnter": "smart",
   /**
    * Controls whether the editor should automatically close brackets after the user adds an opening bracket.
    * Can be: 'always', 'beforeWhitespace', 'languageDefined' or 'never'.
@@ -29,7 +29,7 @@
    * Can be: 'advanced', 'brackets', 'full', 'keep', 'none'.
    * Defaults to 'full'.
    */
-  // "editor.autoIndent": "full",
+  "editor.autoIndent": "advanced",
   /**
    * Controls whether the editor shows CodeLens.
    * Defaults to true.
@@ -48,7 +48,7 @@
    * Control the cursor animation style, possible values are 'blink', 'smooth', 'phase', 'expand' and 'solid'.
    * Defaults to 'blink'.
    */
-  // "editor.cursorBlinking": "blink",
+  "editor.cursorBlinking": "expand",
   /**
    * Controls the cursor style.
    * Can be 'block', 'block-outline', 'line', 'line-thin', 'underline', 'underline-thin'.
@@ -58,7 +58,7 @@
   /**
    * Controls the width of the cursor when 'editor.cursorStyle' is set to 'line'.
    */
-  // "editor.cursorWidth": 2,
+  "editor.cursorWidth": 4,
   /**
    * Controls whether 'editor.tabSize' and 'editor.insertSpaces' will be
    * automatically detected when a file is opened based on the file contents.
@@ -99,16 +99,16 @@
   /**
    * Controls the font size in pixels.
    */
-  // "editor.fontSize": 12,
+  "editor.fontSize": 18,
   /**
    * Controls the font weight. Accepts 'normal' and 'bold' keywords or numbers values between '100' and '900'.
    */
-  // "editor.fontWeight": "normal",
+  "editor.fontWeight": "900",
   /**
    * Controls whether the editor should automatically format the pasted content.
    * Defaults to false.
    */
-  // "editor.formatOnPaste": false,
+  "editor.formatOnPaste": true,
   /**
    * Format a file on save.
    * Defaults to true.
@@ -142,7 +142,7 @@
    * Controls the letter spacing in pixels.
    * Defaults to 0.
    */
-  // "editor.letterSpacing": 0,
+  "editor.letterSpacing": 0.5,
   /**
    * Enables the code action lightbulb in the editor.
    */
@@ -190,7 +190,7 @@
    * Can be: 'alt' or 'ctrlCmd'.
    * Defaults to 'alt'.
    */
-  // "editor.multiCursorModifier": "alt",
+  "editor.multiCursorModifier": "alt",
   /**
    * Enables a pop-up that shows parameter documentation and type information as you type.
    */
@@ -204,7 +204,7 @@
    * Controls the delay in milliseconds after which quick suggestions will show up.
    * Defaults to 10 (ms).
    */
-  // "editor.quickSuggestionsDelay": 10,
+  "editor.quickSuggestionsDelay": 20,
   /**
    * Controls whether the editor should render control characters.
    * Defaults to true.
@@ -220,7 +220,7 @@
    * Can be: 'all', 'gutter', 'line', or 'none'.
    * Defaults to 'line'.
    */
-  // "editor.renderLineHighlight": "line",
+  "editor.renderLineHighlight": "all",
   /**
    * Controls how the editor should render whitespace characters.
    * Can be: 'all', 'boundary', 'none', 'selection' and 'trailing'.
@@ -237,7 +237,7 @@
    * Controls the number of extra characters beyond which the editor will scroll horizontally.
    * Defaults to 4.
    */
-  // "editor.scrollBeyondLastColumn": 4,
+  "editor.scrollBeyondLastColumn": 2,
   /**
    * Controls whether the editor will scroll beyond the last line.
    * Defaults to true.
@@ -258,7 +258,7 @@
    * Can be: 'always' or 'mouseover'.
    * Defaults to 'mouseover'.
    */
-  // "editor.showFoldingControls": "mouseover",
+  "editor.showFoldingControls": "always",
   /**
    * Controls fading out of unused code.
    */
@@ -267,12 +267,12 @@
    * Controls whether the editor will scroll using an animation.
    * Defaults to false.
    */
-  // "editor.smoothScrolling": false,
+  "editor.smoothScrolling": true,
   /**
    * Controls whether snippets are shown with other suggestions and how they are sorted.
    * Can be 'bottom', 'top', 'inline' or 'none'.
    */
-  // "editor.snippetSuggestions": "inline",
+  "editor.snippetSuggestions": "top",
   /**
    * Suggest options.
    */
@@ -286,7 +286,7 @@
    * The number of spaces a tab is equal to. This setting is overridden based
    * on the file contents when 'editor.detectIndentation' is on.
    */
-  // "editor.tabSize": 2,
+  "editor.tabSize": 2,
   /**
    * Inserting and deleting whitespace follows tab stops.
    * Defaults to true.
@@ -305,12 +305,12 @@
    * - 'wordWrapColumn': Lines will wrap at 'editor.wordWrapColumn'.
    * Defaults to 'on'.
    */
-  // "editor.wordWrap": "on",
+  "editor.wordWrap": "on",
   /**
    * Controls the wrapping column of the editor when 'editor.wordWrap' is 'wordWrapColumn' or 'bounded'.
    * Defaults to 80.
    */
-  // "editor.wordWrapColumn": 80,
+  // "editor.wordWrapColumn": 100,
   /**
    * Controls the indentation of wrapped lines.
    * Can be: 'none', 'same', 'indent' or 'deepIndent'.
@@ -320,24 +320,24 @@
   /**
    * Prettier - Print semicolons at the ends of statements.
    */
-  // "prettier.semi": true,
+  "prettier.semi": true,
   /**
    * Prettier - Use single quotes instead of double quotes.
    */
-  // "prettier.singleQuote": true,
+  "prettier.singleQuote": true,
   /**
    * Prettier - Specify the number of spaces per indentation-level.
    */
-  // "prettier.tabWidth": 2,
+  "prettier.tabWidth": 2,
   /**
    * Prettier - Indent lines with tabs instead of spaces.
    */
-  // "prettier.useTabs": false,
+  "prettier.useTabs": true,
   /**
    * Controls whether the terminal cursor blinks.
    * Defaults to false.
    */
-  // "terminal.integrated.cursorBlinking": false,
+  "terminal.integrated.cursorBlinking": true,
   /**
    * Controls the style of terminal cursor.
    * Can be: 'block' (default), 'line' or 'underline'.
@@ -347,17 +347,17 @@
    * Controls the width of the cursor when 'terminal.integrated.cursorStyle' is set to 'line'.
    * Defaults to 2.
    */
-  // "terminal.integrated.cursorWidth": 2,
+  "terminal.integrated.cursorWidth": 4,
   /**
    * Controls the font size in pixels of the terminal.
    * Defaults to 12.
    */
-  // "terminal.integrated.fontSize": 12,
+  "terminal.integrated.fontSize": 18,
   /**
    * Controls the line height of the terminal, this number is multiplied by the terminal font size to get the actual line-height in pixels.
    * Defaults to 1.
    */
-  // "terminal.integrated.lineHeight": 1,
+  "terminal.integrated.lineHeight": 1.25,
   /**
    * When set, the foreground color of each cell will change to try meet the contrast ratio specified. Example values:
    * - 1: Do nothing and use the standard theme colors.
@@ -366,4 +366,15 @@
    * - 21: White on black or black on white.
    */
   // "terminal.integrated.minimumContrastRatio": 4.5,
+  /* 
+  * ESLint Validation and VSCode settings. Downoad the dbaeumer.vscode-eslint extension.
+  * NOTE: You have to configure the `eslint.validate` option of the extension to check `.astro` files since the extension targets only `*.js` or `*.jsx` files by default
+  */
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "astro",  // Enable .astro
+    "typescript",  // Enable .ts
+    "typescriptreact"  // Enable .tsx
+  ]
 }

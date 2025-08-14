@@ -1,17 +1,12 @@
 ---
 import '../styles/global.css';
 import Navbar from "../components/ui/Navbar.astro";
+import BaseHead from "../components/ui/BaseHead.astro";
 ---
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
+	<BaseHead />
 	<body>
 		<Navbar />
 		<slot />
