@@ -1,4 +1,6 @@
-{
+ /** @type {Options} */ 
+/** @typedef {import("@types/prettier").Options} Options */
+export default {
   "plugins": [
     "prettier-plugin-astro",
     "prettier-plugin-tailwindcss"
