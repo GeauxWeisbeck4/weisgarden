@@ -1,55 +1,61 @@
 <div class="flex flex-col items-center bg-white px-4 py-6">
-  <!-- Shared max width container -->
-  <div class="max-w-4xl w-full">
-    <!-- Title area-->
-    <div class="text-center mb-4">
-  <h1 class="text-3xl"><strong class="bg-slate-950 text-white hover:text-teal-500 hover:underline border-s-2 border-slate-700 rounded-md px-4 py-2">WeisGarden</strong> - 🌿 Digital Garden by Andrew Weisbeck</h1> 
-</div>
-<!-- Bordered box matching width -->
-<div class="border border-black rounded-md px-4 py-4 mb-6 bg-slate-100">
-  
-  <!-- Heading -->
-  <h2 class="text-lg font-semibold text-left">
-    Andrew Weisbeck
-  </h2>
+	<!-- Shared max width container -->
+	<div class="w-full max-w-4xl">
+		<!-- Title area-->
+		<div class="mb-4 text-center">
+			<h1 class="text-sm md:text-2xl lg:text-3xl">
+				<strong
+					class="rounded-md border-s-2 border-slate-700 bg-slate-950 px-4 py-2 text-white hover:text-teal-500 hover:underline"
+					>WeisGarden</strong
+				> - 🌿 Digital Garden by Andrew Weisbeck
+			</h1>
+		</div>
+		<!-- Bordered box matching width -->
+		<div class="mb-6 rounded-md border border-black bg-slate-100 px-4 py-4">
+			<!-- Heading -->
+			<h2 class="md:text-md text-left text-sm font-semibold lg:text-lg">
+				Andrew Weisbeck
+			</h2>
 
-  <!-- Description -->
-  <p class="mt-1 text-gray-700 text-left">
-    A place for collecting thoughts, notes, ideas, and more — my own corner of the internet to share with the world.
-  </p>
+			<!-- Description -->
+			<p class="lg:text-md mt-1 text-left text-xs text-gray-700 md:text-sm">
+				A place for collecting thoughts, notes, ideas, and more — my own corner
+				of the internet to share with the world.
+			</p>
 
-  <!-- Link (aligned right) -->
-  <div class="mt-2 flex justify-end items-center space-x-1">
-    <a 
-      class="text-blue-500 underline font-semibold hover:text-blue-700 hover:font-bold flex items-center"
-      href="https://andrews-wiki.netlify.app"
-    >
-       <!-- Chain link icon from Heroicons (outline) -->
-          <svg xmlns="http://www.w3.org/2000/svg"
-               fill="none"
-               viewBox="0 0 24 24"
-               stroke-width="2"
-               stroke="currentColor"
-               class="w-4 h-4 mr-1"
-               aria-hidden="true"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M13.828 10.172a4 4 0 010 5.656l-3.536 3.536a4 4 0 01-5.656-5.656l1.414-1.414m5.656-5.656l3.536-3.536a4 4 0 015.656 5.656l-1.414 1.414" />
-          </svg>
-      https://andrews-wiki.netlify.app
-      <!-- Icon -->
-      
-    </a>
-  </div>
+			<!-- Link (aligned right) -->
+			<div class="mt-2 flex items-center justify-end space-x-1">
+				<a
+					class="md:text-md flex items-center text-sm font-semibold text-blue-500 underline hover:font-bold hover:text-blue-700 lg:text-lg"
+					href="https://andrews-wiki.netlify.app"
+				>
+					<!-- Chain link icon from Heroicons (outline) -->
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke-width="2"
+						stroke="currentColor"
+						class="mr-1 h-4 w-4"
+						aria-hidden="true"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							d="M13.828 10.172a4 4 0 010 5.656l-3.536 3.536a4 4 0 01-5.656-5.656l1.414-1.414m5.656-5.656l3.536-3.536a4 4 0 015.656 5.656l-1.414 1.414"
+						></path>
+					</svg>
+					https://andrews-wiki.netlify.app
+					<!-- Icon -->
+				</a>
+			</div>
+		</div>
 
-</div>
+		<!-- Navigation + Search container -->
 
-
-<!-- Navigation + Search container -->
-
-<nav 
-  class="text-center font-medium text-gray-700 flex-1"
-  x-data="{
+		<nav
+			class="md:text-md flex-1 text-center text-sm font-medium text-gray-700 lg:text-lg"
+			x-data="{
     navbarLinks: [
       { path: '/about', title: 'About' },
       { path: '/notes', title: 'Notes' },
@@ -59,60 +65,62 @@
       { path: '/support', title: 'Support' },
     ]
   }"
->
-  <template x-for="(link, i) in navbarLinks" :key="link.path">
-    <span>
-      <a class="inline-block px-4 py-2 hover:text-teal-600 font-semibold transition-colors text-2xl" :href="link.path" x-text="link.title"></a>
-        <template x-if="i != navbarLinks.length - 1">
-          <strong class="text-black"> | </strong>
-        </template>
-      </span>
-    </template>
-  </nav>
+		>
+			<template x-for="(link, i) in navbarLinks" :key="link.path">
+				<span>
+					<a
+						class="md:text-xl lg:text-x inline-block md:px-2 lg:px-4 py-2 text-sm font-semibold transition-colors hover:text-teal-600"
+						:href="link.path"
+						x-text="link.title"></a>
+					<template x-if="i != navbarLinks.length - 1">
+						<strong class="text-black"> | </strong>
+					</template>
+				</span>
+			</template>
+		</nav>
 
-  <!-- Search bar -->
-  <form 
-    class="relative max-w-xs mx-auto mt-4 w-full space-x-2 flex items-center"
-    x-data="{ searchTerm: '' }"
-    @submit.prevent="alert('Searching for: ' + searchTerm)"
-    >
-    <label for="search" class="sr-only">Search</label>
+		<!-- Search bar -->
+		<form
+			class="relative mx-auto mt-4 flex w-full max-w-xs items-center space-x-2"
+			x-data="{ searchTerm: '' }"
+			@submit.prevent="alert('Searching for: ' + searchTerm)"
+		>
+			<label for="search" class="sr-only">Search</label>
 
-    <input
-      id="search"
-      name="search"
-      type="search"
-      placeholder="Search..."
-      x-model="searchTerm"
-      class="flex-grow w-full rounded-md border border-gray-300 pl-10 pr-3 py-2 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
-    />
+			<input
+				id="search"
+				name="search"
+				type="search"
+				placeholder="Search..."
+				x-model="searchTerm"
+				class="w-full flex-grow rounded-md border border-gray-300 py-2 pr-3 pl-10 text-sm placeholder-gray-500 focus:border-teal-500 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+			/>
 
-    <button
-      type="submit"
-      class="inline-flex items-center px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500"
-    >
-      Search
-    </button>
+			<button
+				type="submit"
+				class="inline-flex items-center rounded-md bg-teal-600 px-4 py-2 text-white hover:bg-teal-700 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+			>
+				Search
+			</button>
 
-    
-  <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-    <!-- Search icon -->
-    <svg
-      class="h-5 w-5 text-gray-400"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1111.35 3a7.5 7.5 0 015.3 13.65z"
-      />
-    </svg>
-  </div>
-  </form>
+			<div
+				class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
+			>
+				<!-- Search icon -->
+				<svg
+					class="h-5 w-5 text-gray-400"
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1111.35 3a7.5 7.5 0 015.3 13.65z"
+					></path>
+				</svg>
+			</div>
+		</form>
+	</div>
 </div>
-</div>
-
-

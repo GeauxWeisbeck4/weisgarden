@@ -1,12 +1,13 @@
 ---
 title: "Welcome to Andrew's Digital Garden"
-pubDate: 2025-08-10
 description: "Giving you a warm welcome and thanking you for stopping by to check out my personal website and digital garden!"
-author: "Andrew Weisbeck"
-image:
-    url: "https://res.cloudinary.com/tar-heel-dev-studio/image/upload/v1743095346/digital_office_uz0qja.png"
-    alt: "Andrew's digital garden office"
+publishDate: "10 August 2025"
 tags: ["digital-garden", "about"]
+updatedDate: "14 August 2025"
+coverImage:
+    alt: "Andrew's digital garden office"
+    src: "https://res.cloudinary.com/tar-heel-dev-studio/image/upload/v1743095346/digital_office_uz0qja.png"
+pinned: true
 ---
 
 Hey there! My name is Andrew and this is my personal website and digital garden. I write about all sorts of stuff here - you'll read about sports, programming, psychology, business, philosophy, and maybe even a little bit of creative fiction writing from time to time. There are no limits, no rules, and no creative judgment on this site!

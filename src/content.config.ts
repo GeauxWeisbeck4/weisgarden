@@ -16,15 +16,25 @@ const post = defineCollection({
   loader: glob({ pattern: ['**/*.md', '**/*.mdx'], base: './src/content/posts' }),
   schema: ({ image }) =>
     baseSchema.extend({
-      pubDate: z.string(),
       description: z.string(),
-      author: z.string(),
-      image: z.object({
-        url: z.string(),
-        alt: z.string()
-      }),
-      tags: z.array(z.string())
-    })
+      coverImage: z.object({
+        alt: z.string(),
+        src: image(),
+      })
+      .optional(),
+      draft: z.boolean().default(false),
+      ogImage: z.string().optional(),
+      tags: z.array(z.string()).default([]).transform(removeDupsAndLowerCase),
+      publishDate: z
+        .string()
+        .or(z.date())
+        .transform((val) => new Date(val)),
+      updatedDate: z
+        .string()
+        .optional()
+        .transform((str) => (str ? new Date(str) : undefined)),
+      pinned: z.boolean().default(false),
+    }),
 });
 
 export const collections = { post }
