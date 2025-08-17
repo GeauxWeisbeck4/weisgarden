@@ -1,0 +1,15 @@
+---
+import { type CollectionEntry, render } from "astro:content";
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+interface Props {
+  post: CollectionEntry<'post'>;
+}
+
+const { post }: Props = Astro.props;
+const { ogImage, title, description, updatedDate, publishDate } = post.data;
+const socialImage = ogImage ?? `/og-image/${post.id}.png`;
+const articleDate = updatedDate?.toISOString() ?? publishDate.toISOString();
+
+---

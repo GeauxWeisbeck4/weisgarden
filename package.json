@@ -12,6 +12,7 @@
   "dependencies": {
     "@astrojs/alpinejs": "^0.4.8",
     "@astrojs/mdx": "^4.3.4",
+    "@astrojs/sitemap": "^3.5.0",
     "@tailwindcss/vite": "^4.1.11",
     "@types/alpinejs": "^3.13.11",
     "alpinejs": "^3.14.9",

@@ -37,4 +37,15 @@ const post = defineCollection({
     }),
 });
 
-export const collections = { post }
+const note = defineCollection({
+  loader: glob({ base: "./src/content/notes", pattern: "**/*.{md,mdx}" }),
+  schema: baseSchema.extend({
+    description: z.string().optional(),
+    publishDate: z
+      .string()
+      .datetime({ offset: true })
+      .transform((val) => new Date(val)),
+  }),
+});
+
+export const collections = { post, note };
