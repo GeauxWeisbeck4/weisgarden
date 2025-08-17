@@ -3,7 +3,7 @@
 	<div class="w-full max-w-4xl">
 		<!-- Title area-->
 		<div class="mb-4 text-center">
-			<h1 class="text-sm md:text-2xl lg:text-3xl">
+			<h1 class="text-lg sm:text-xl md:text-2xl lg:text-3xl">
 				<strong
 					class="rounded-md border-s-2 border-slate-700 bg-slate-950 px-4 py-2 text-white hover:text-teal-500 hover:underline"
 					>WeisGarden</strong
@@ -13,12 +13,12 @@
 		<!-- Bordered box matching width -->
 		<div class="mb-6 rounded-md border border-black bg-slate-100 px-4 py-4">
 			<!-- Heading -->
-			<h2 class="md:text-md text-left text-sm font-semibold lg:text-lg">
+			<h2 class="md:text-lg text-left text-md font-semibold lg:text-xl">
 				Andrew Weisbeck
 			</h2>
 
 			<!-- Description -->
-			<p class="lg:text-md mt-1 text-left text-xs text-gray-700 md:text-sm">
+			<p class="lg:text-lg mt-1 text-left text-sm text-gray-700 md:text-md">
 				A place for collecting thoughts, notes, ideas, and more — my own corner
 				of the internet to share with the world.
 			</p>
@@ -54,7 +54,7 @@
 		<!-- Navigation + Search container -->
 
 		<nav
-			class="md:text-md flex-1 text-center text-sm font-medium text-gray-700 lg:text-lg"
+			class="md:text-2xl flex-1 text-center text-xl font-medium text-gray-700 lg:text-3xl"
 			x-data="{
     navbarLinks: [
       { path: '/about', title: 'About' },
@@ -69,7 +69,7 @@
 			<template x-for="(link, i) in navbarLinks" :key="link.path">
 				<span>
 					<a
-						class="md:text-xl lg:text-x inline-block md:px-2 lg:px-4 py-2 text-sm font-semibold transition-colors hover:text-teal-600"
+						class="md:text-xl lg:text-2xl inline-block md:px-2 lg:px-4 py-2 text-lg font-semibold transition-colors hover:text-teal-600"
 						:href="link.path"
 						x-text="link.title"></a>
 					<template x-if="i != navbarLinks.length - 1">

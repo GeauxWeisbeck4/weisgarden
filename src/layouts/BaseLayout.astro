@@ -7,17 +7,10 @@ import BaseHead from "../components/ui/BaseHead.astro";
 <!doctype html>
 <html lang="en">
 	<BaseHead />
-	<body>
-		<Navbar />
-		<slot />
+	<Navbar />
+	<body class="max-w-4xl mx-auto bg-white">
+			<slot />
 	</body>
 </html>
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+

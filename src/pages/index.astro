@@ -6,7 +6,18 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout>
-	<section class="mt-10">
-		<h1 class="text-center text-2xl font-bold">Welcome to Andrew's Digital Garden!</h1>
+	<section class="mx-auto flex flex-col bg-white px-4 py-6 mt-6">
+		<div class="max-w-4xl text-left">
+			<h1 class="text-3xl font-bold">Meditate. Focus. Create.</h1>
+			<p class="text-lg mt-4">Welcome to the digital garden of Andrew Weisbeck, WeisGarden! This website was inspired by one of my favorite themes, Enjoyment Work by Brennan Brown. You will notice many similar styling, structure, and layout aspects of that theme here, so I must give a lot of credit to Brennan because he is the one who thought of this design, thanks!</p>
+			<br>
+			<p class="text-lg">This is a place for me to collect my thoughts, notes, ideas, and more — my own corner of the internet to share with the world. I hope you find something useful or interesting here! Here are some things you might want to check out if you aren't sure where to start:</p>
+			<ol class="mt-4 list-decimal list-inside pl-4">
+				<li class="mt-2"><a class="text-xl text-sky-600 hover:text-sky-800 hover:underline hover:underline-offset-1" href="/notes/catalog">Notes Catalog</a></li>
+					<ul class="list-disc list-inside pl-4 mt-2">
+						<li class="text-xl">Collection of my notes - everything including Greek Philosophy, psychology, computer science, and Bayesean Statistics. Something for everyone.</li>
+					</ul>
+			</ol>
+		</div>
 	</section>
 </BaseLayout>
