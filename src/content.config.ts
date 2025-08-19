@@ -45,7 +45,26 @@ const note = defineCollection({
       .string()
       .datetime({ offset: true })
       .transform((val) => new Date(val)),
+    categories: z.array(z.string()).default([]).transform(removeDupsAndLowerCase),
+    tags: z.array(z.string()).default([]).transform(removeDupsAndLowerCase),
   }),
 });
 
-export const collections = { post, note };
+const category = defineCollection({
+  loader: glob({ base: "./src/content/categories", pattern: "**/*.{md,mdx}" }),
+  schema: z.object({
+    title: titleSchema.optional(),
+    description: z.string().optional(),
+    tags: z.array(z.string()).default([]).transform(removeDupsAndLowerCase),
+  }),
+});
+
+const tag = defineCollection({
+  loader: glob({ base: "./src/content/tags", pattern: "**/*.{md,mdx}" }),
+  schema: z.object({
+    title: titleSchema.optional(),
+    description: z.string().optional(),
+  }),
+});
+
+export const collections = { post, note, category, tag };

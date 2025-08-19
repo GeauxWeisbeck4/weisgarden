@@ -1,5 +1,5 @@
 {
-  "name": "@example/basics",
+  "name": "weisgarden",
   "type": "module",
   "version": "0.0.1",
   "private": true,
@@ -11,15 +11,22 @@
   },
   "dependencies": {
     "@astrojs/alpinejs": "^0.4.8",
+    "@astrojs/markdown-remark": "^6.3.6",
     "@astrojs/mdx": "^4.3.4",
+    "@astrojs/netlify": "^6.5.7",
     "@astrojs/sitemap": "^3.5.0",
     "@tailwindcss/vite": "^4.1.11",
     "@types/alpinejs": "^3.13.11",
     "alpinejs": "^3.14.9",
     "astro": "^5.13.2",
+    "astro-expressive-code": "^0.41.3",
+    "astro-icon": "^1.1.5",
+    "astro-robots-txt": "^1.0.0",
+    "astro-webmanifest": "^1.0.0",
     "tailwindcss": "^4.1.11"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.2.0",
     "@tailwindcss/typography": "^0.5.16",
     "@typescript-eslint/parser": "^8.39.1",
     "eslint": "^9.33.0",

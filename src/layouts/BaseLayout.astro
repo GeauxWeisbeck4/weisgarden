@@ -2,11 +2,21 @@
 import '../styles/global.css';
 import Navbar from "../components/ui/Navbar.astro";
 import BaseHead from "../components/ui/BaseHead.astro";
+import { siteConfig } from "../site.config.ts";
+import type { SiteMeta } from "../types.ts";
+
+interface Props {
+	meta: SiteMeta;
+}
+
+const { 
+	meta: {articleDate, description = siteConfig.description, ogImage, title },
+} = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
-	<BaseHead />
+	<BaseHead articleDate={articleDate} description={description} ogImage={ogImage} title={title} />
 	<Navbar />
 	<body class="max-w-4xl mx-auto bg-white">
 			<slot />

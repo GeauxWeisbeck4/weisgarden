@@ -1,0 +1,8 @@
+*.min.js
+node_modules
+
+# cache-dirs
+**/.cache
+
+npm-lock.json
+dist
