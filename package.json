@@ -23,7 +23,21 @@
     "astro-icon": "^1.1.5",
     "astro-robots-txt": "^1.0.0",
     "astro-webmanifest": "^1.0.0",
-    "tailwindcss": "^4.1.11"
+    "hastscript": "^9.0.1",
+    "mdast": "^2.3.2",
+    "mdast-util-directive": "^3.1.0",
+    "mdast-util-to-markdown": "^2.1.2",
+    "mdast-util-to-string": "^4.0.0",
+    "rehype-autolink-headings": "^7.1.0",
+    "rehype-external-links": "^3.0.0",
+    "rehype-unwrap-images": "^1.0.0",
+    "remark-directive": "^4.0.0",
+    "satori": "^0.16.2",
+    "satori-html": "^0.3.2",
+    "sharp": "^0.34.3",
+    "tailwindcss": "^4.1.11",
+    "unified": "^11.0.5",
+    "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.0",

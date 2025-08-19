@@ -1,17 +1,17 @@
-<div class="flex flex-col items-center bg-white px-4 py-6">
+<div class="flex flex-col items-center bg-white px-4 py-6 mt-2">
 	<!-- Shared max width container -->
-	<div class="w-full max-w-4xl">
+	<div class="w-full">
 		<!-- Title area-->
-		<div class="mb-4 text-center">
+		<div class="mb-4 text-center max-w-4xl">
 			<h1 class="text-lg sm:text-xl md:text-2xl lg:text-3xl">
 				<strong
 					class="rounded-md border-s-2 border-slate-700 bg-slate-950 px-4 py-2 text-white hover:text-teal-500 hover:underline"
 					>WeisGarden</strong
-				> - 🌿 Digital Garden by Andrew Weisbeck
+				> - 🌿 Andrew's Digital Garden
 			</h1>
 		</div>
 		<!-- Bordered box matching width -->
-		<div class="mb-6 rounded-md border border-black bg-slate-100 px-4 py-4">
+		<div class="mb-6 mt-6 rounded-md border border-black bg-slate-100 px-4 py-4">
 			<!-- Heading -->
 			<h2 class="md:text-lg text-left text-md font-semibold lg:text-xl">
 				Andrew Weisbeck
@@ -19,12 +19,11 @@
 
 			<!-- Description -->
 			<p class="lg:text-lg mt-1 text-left text-sm text-gray-700 md:text-md">
-				A place for collecting thoughts, notes, ideas, and more — my own corner
-				of the internet to share with the world.
+				Where ideas grow, creativity flourishes, and content finds its form. I'm a outspoken individual who holds values above all else and loves learning, teaching, and creating. Anyone and everyone is welcome to collaborate with me!
 			</p>
 
 			<!-- Link (aligned right) -->
-			<div class="mt-2 flex items-center justify-end space-x-1">
+			<div class="mt-2 flex items-center justify-end">
 				<a
 					class="md:text-md flex items-center text-sm font-semibold text-blue-500 underline hover:font-bold hover:text-blue-700 lg:text-lg"
 					href="https://andrews-wiki.netlify.app"
@@ -69,11 +68,11 @@
 			<template x-for="(link, i) in navbarLinks" :key="link.path">
 				<span>
 					<a
-						class="md:text-xl lg:text-2xl inline-block md:px-2 lg:px-4 py-2 text-lg font-semibold transition-colors hover:text-teal-600"
+						class="md:text-lg lg:text-xl inline-block text-lg font-bold transition-colors hover:text-teal-600"
 						:href="link.path"
 						x-text="link.title"></a>
 					<template x-if="i != navbarLinks.length - 1">
-						<strong class="text-black"> | </strong>
+						<span class="text-black">|</span>
 					</template>
 				</span>
 			</template>
@@ -81,7 +80,7 @@
 
 		<!-- Search bar -->
 		<form
-			class="relative mx-auto mt-4 flex w-full max-w-xs items-center space-x-2"
+			class="relative mx-auto mt-4 flex w-full max-w-xl items-center space-x-2"
 			x-data="{ searchTerm: '' }"
 			@submit.prevent="alert('Searching for: ' + searchTerm)"
 		>

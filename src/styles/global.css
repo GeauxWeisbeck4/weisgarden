@@ -1,3 +1,28 @@
 @import "tailwindcss";
 /* config for tailwindcss-typography plugin */
 @config "../../tailwind.config.ts";
+
+/* use a selector-based strategy for dark mode */
+@variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme {
+  --color-global-bg: oklch(1 0 0);
+  --color-global-text: oklch(20.8% 0.042 265.755);
+  --color-link: oklch(0.5385 0.220991 29.2339);
+  --color-accent: oklch(58.8% 0.158 241.966);
+  --color-accent-2: oklch(43.7% 0.078 188.216);
+  --color-quote: oklch(0.5385 0.220991 29.2339);
+}
+
+/* TODO: Add other color schemes that the user can select for UX Enhancement */
+@layer base {
+  html {
+    color-scheme: light dark;
+    accent-color: var(--color-accent);
+    scrollbar-gutter: stable;
+
+    &[data-theme="light"] {
+      color-scheme: light;
+    }
+  }
+}
