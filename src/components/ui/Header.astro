@@ -1,60 +1,69 @@
-<div class="flex flex-col items-center bg-white px-4 py-6 mt-2">
-	<!-- Shared max width container -->
-	<div class="w-full">
-		<!-- Title area-->
-		<div class="mb-4 text-center max-w-4xl">
-			<h1 class="text-lg sm:text-xl md:text-2xl lg:text-3xl">
-				<strong
-					class="rounded-md border-s-2 border-slate-700 bg-slate-950 px-4 py-2 text-white hover:text-teal-500 hover:underline"
-					>WeisGarden</strong
-				> - 🌿 Andrew's Digital Garden
-			</h1>
-		</div>
-		<!-- Bordered box matching width -->
-		<div class="mb-6 mt-6 rounded-md border border-black bg-slate-100 px-4 py-4">
-			<!-- Heading -->
-			<h2 class="md:text-lg text-left text-md font-semibold lg:text-xl">
-				Andrew Weisbeck
-			</h2>
+---
+import Search from "./Search.astro";
+import ThemeToggler from './ThemeToggler.astro';
+import { siteConfig } from '../../site.config';
+---
 
-			<!-- Description -->
-			<p class="lg:text-lg mt-1 text-left text-sm text-gray-700 md:text-md">
-				Where ideas grow, creativity flourishes, and content finds its form. I'm a outspoken individual who holds values above all else and loves learning, teaching, and creating. Anyone and everyone is welcome to collaborate with me!
-			</p>
-
-			<!-- Link (aligned right) -->
-			<div class="mt-2 flex items-center justify-end">
-				<a
-					class="md:text-md flex items-center text-sm font-semibold text-blue-500 underline hover:font-bold hover:text-blue-700 lg:text-lg"
-					href="https://andrews-wiki.netlify.app"
-				>
-					<!-- Chain link icon from Heroicons (outline) -->
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke-width="2"
-						stroke="currentColor"
-						class="mr-1 h-4 w-4"
-						aria-hidden="true"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							d="M13.828 10.172a4 4 0 010 5.656l-3.536 3.536a4 4 0 01-5.656-5.656l1.414-1.414m5.656-5.656l3.536-3.536a4 4 0 015.656 5.656l-1.414 1.414"
-						></path>
-					</svg>
-					https://andrews-wiki.netlify.app
-					<!-- Icon -->
-				</a>
+<header class="group relative flex items-center" id="main-header">
+	<div class="flex sm:flex-col px-4 py-6 mt-2">
+		<!-- Shared max width container -->
+		<div class="w-full">
+			<!-- Title area-->
+			<div class="mb-4 text-center max-w-4xl">
+				<h1 class="text-lg sm:text-xl md:text-2xl lg:text-3xl">
+					<strong
+						class="rounded-md border-s-2 border-slate-700 bg-slate-950 px-4 py-2 text-white hover:text-teal-500 hover:underline"
+						>{siteConfig.title}</strong
+					> - {siteConfig.subTitle}
+				</h1>
 			</div>
-		</div>
+			<!-- Bordered box matching width -->
+			<div
+				class="mb-6 mt-6 rounded-md border border-black bg-slate-100 px-4 py-4"
+			>
+				<!-- Heading -->
+				<h2 class="md:text-lg text-left text-md font-semibold lg:text-xl">
+					{siteConfig.author}
+				</h2>
 
-		<!-- Navigation + Search container -->
+				<!-- Description -->
+				<p class="lg:text-lg mt-1 text-left text-sm text-gray-700 md:text-md">
+					{siteConfig.description}
+				</p>
 
-		<nav
-			class="md:text-2xl flex-1 text-center text-xl font-medium text-gray-700 lg:text-3xl"
-			x-data="{
+				<!-- Link (aligned right) -->
+				<div class="mt-2 flex items-center justify-end">
+					<a
+						class="md:text-md flex items-center text-sm font-semibold text-blue-500 underline hover:font-bold hover:text-blue-700 lg:text-lg"
+						href="https://andrews-wiki.netlify.app"
+					>
+						<!-- Chain link icon from Heroicons (outline) -->
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke-width="2"
+							stroke="currentColor"
+							class="mr-1 h-4 w-4"
+							aria-hidden="true"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d="M13.828 10.172a4 4 0 010 5.656l-3.536 3.536a4 4 0 01-5.656-5.656l1.414-1.414m5.656-5.656l3.536-3.536a4 4 0 015.656 5.656l-1.414 1.414"
+							></path>
+						</svg>
+						{siteConfig.url}
+						<!-- Icon -->
+					</a>
+				</div>
+			</div>
+
+			<!-- Navigation + Search container -->
+
+			<nav
+				class="md:text-2xl flex-1 text-center text-xl font-medium text-gray-700 lg:text-3xl"
+				x-data="{
     navbarLinks: [
       { path: '/about', title: 'About' },
       { path: '/notes', title: 'Notes' },
@@ -64,62 +73,87 @@
       { path: '/support', title: 'Support' },
     ]
   }"
-		>
-			<template x-for="(link, i) in navbarLinks" :key="link.path">
-				<span>
-					<a
-						class="md:text-lg lg:text-xl inline-block text-lg font-bold transition-colors hover:text-teal-600"
-						:href="link.path"
-						x-text="link.title"></a>
-					<template x-if="i != navbarLinks.length - 1">
-						<span class="text-black">|</span>
-					</template>
-				</span>
-			</template>
-		</nav>
-
-		<!-- Search bar -->
-		<form
-			class="relative mx-auto mt-4 flex w-full max-w-xl items-center space-x-2"
-			x-data="{ searchTerm: '' }"
-			@submit.prevent="alert('Searching for: ' + searchTerm)"
-		>
-			<label for="search" class="sr-only">Search</label>
-
-			<input
-				id="search"
-				name="search"
-				type="search"
-				placeholder="Search..."
-				x-model="searchTerm"
-				class="w-full flex-grow rounded-md border border-gray-300 py-2 pr-3 pl-10 text-sm placeholder-gray-500 focus:border-teal-500 focus:ring-2 focus:ring-teal-500 focus:outline-none"
-			/>
-
-			<button
-				type="submit"
-				class="inline-flex items-center rounded-md bg-teal-600 px-4 py-2 text-white hover:bg-teal-700 focus:ring-2 focus:ring-teal-500 focus:outline-none"
 			>
-				Search
-			</button>
+				<template x-for="(link, i) in navbarLinks" :key="link.path">
+					<span>
+						<a
+							class="md:text-lg lg:text-xl inline-block text-lg font-bold transition-colors hover:text-teal-600"
+							:href="link.path"
+							x-text="link.title"></a>
+						<template x-if="i != navbarLinks.length - 1">
+							<span class="text-black">|</span>
+						</template>
+					</span>
+				</template>
+			</nav>
 
-			<div
-				class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
-			>
-				<!-- Search icon -->
-				<svg
-					class="h-5 w-5 text-gray-400"
-					fill="none"
-					stroke="currentColor"
-					viewBox="0 0 24 24"
-				>
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1111.35 3a7.5 7.5 0 015.3 13.65z"
-					></path>
-				</svg>
-			</div>
-		</form>
+			<!-- Search bar -->
+			
+		</div>
 	</div>
-</div>
+	<mobile-button>
+		<button
+			aria-expanded="false"
+			aria-haspopup="menu"
+			class="group relative ms-4 h-7 w-7 sm:invisible sm:hidden"
+			id="toggle-navigation-menu"
+			type="button"
+		>
+			<span class="sr-only">Open main menu</span>
+			<svg
+				aria-hidden="true"
+				class="absolute start-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 transition-all group-aria-expanded:scale-0 group-aria-expanded:opacity-0"
+				fill="none"
+				focusable="false"
+				id="line-svg"
+				stroke="currentColor"
+				stroke-width="1.5"
+				viewBox="0 0 24 24"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<path
+					d="M3.75 9h16.5m-16.5 6.75h16.5"
+					stroke-linecap="round"
+					stroke-linejoin="round"></path>
+			</svg>
+			<svg
+				aria-hidden="true"
+				class="text-accent absolute start-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 scale-0 opacity-0 transition-all group-aria-expanded:scale-100 group-aria-expanded:opacity-100"
+				class="text-accent"
+				fill="none"
+				focusable="false"
+				id="cross-svg"
+				stroke="currentColor"
+				stroke-width="1.5"
+				viewBox="0 0 24 24"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<path
+					d="M6 18L18 6M6 6l12 12"
+					stroke-linecap="round"
+					stroke-linejoin="round"></path>
+			</svg>
+		</button>
+	</mobile-button>
+</header>
+
+<script>
+	import { toggleClass } from "../../utils/domElement";
+
+	class MobileNavBtn extends HTMLElement {
+		#menuOpen: boolean = false;
+
+		connectedCallback() {
+			const headerElement = document.getElementById("main-header");
+			const mobileButtonElement = this.querySelector<HTMLButtonElement>("button");
+
+			mobileButtonElement?.addEventListener("click", () => {
+				if (headerElement) toggleClass(headerElement, "menu-open");
+				this.#menuOpen = !this.#menuOpen;
+				mobileButtonElement.setAttribute("aria-expanded", this.#menuOpen.toString());
+			});
+		}
+	}
+
+	customElements.define("mobile-button", MobileNavBtn);
+</script>

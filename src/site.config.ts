@@ -11,10 +11,11 @@ export const siteConfig: SiteConfig = {
 			year: "numeric",
 		},
 	},
-  description: "A digital garden for sharing knowledge about programming, computer enscience, system design, and a whole lot of other stuff!",
+  description: "Where ideas grow, creativity flourishes, and content finds its form. I'm a outspoken individual who holds values above all else and loves learning, teaching, and creating. Anyone and everyone is welcome to collaborate with me!",
   lang: "en-US",
   ogLocale: "en_US",
   title: "WeisGarden",
+	subTitle: "🌿 Andrew's Digital Garden",
   url: "https://andrewsdigitalgarden.netlify.app",
 };
 

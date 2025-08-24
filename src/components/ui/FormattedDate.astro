@@ -4,7 +4,7 @@ import type { HTMLAttributes } from "astro/types";
 
 type Props = HTMLAttributes<"time"> & {
   date: Date;
-  dateTimeOptions: Intl.DateTimeFormatOptions;
+  dateTimeOptions?: Intl.DateTimeFormatOptions;
 }
 
 const { date, dateTimeOptions, ...attrs } = Astro.props;
