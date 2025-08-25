@@ -1,5 +1,5 @@
-<theme-toggle class="ms-2 sm:ms-4">
-	<butotn
+<theme-toggler class="ms-2 sm:ms-1">
+	<button
 		class="hover:text-accent relative h-9 w-9 cursor-pointer rounded-md p-2"
 		type="button"
 	>
@@ -80,14 +80,14 @@
 			></path>
 			<path d="M19 11h2m-1 -1v2"></path>
 		</svg>
-	</butotn>
-</theme-toggle>
+	</button>
+</theme-toggler>
 
 <script>
 	// Note that if you fire the theme-change event outside of this component, it will not be reflected in the button's aria-checked attribute. You will need to add an event listener if you want that.
   import { rootInDarkMode } from "../../utils/domElement.ts";
 
-  class ThemeToggle extends HTMLElement {
+  class ThemeToggler extends HTMLElement {
     constructor() {
       super();
       const button = this.querySelector<HTMLButtonElement>("button");
@@ -117,5 +117,5 @@
     }
   }
 
-  customElements.define("theme-toggle", ThemeToggle);
+  customElements.define("theme-toggler", ThemeToggler);
 </script>

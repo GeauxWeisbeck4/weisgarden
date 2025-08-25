@@ -24,7 +24,18 @@
     &[data-theme="light"] {
       color-scheme: light;
     }
+
+   &[data-theme="dark"] {
+    color-scheme: dark;
+    --color-global-bg: oklch(0.1515 0.0567 248);
+    --color-global-text: oklch(0.9585 0.0139 88.68);
+    --color-link: oklch(0.7774 0.1133 167.72);
+    --color-accent: oklch(70.91% 0.1415 163.7);
+    --color-accent-2: oklch(0.7091 0.1415 243.56);
+    --color-quote: oklch(0.948 0.106 136.49);
+   } 
   }
+  
 
   :target {
     scroll-margin-block: 5ex;

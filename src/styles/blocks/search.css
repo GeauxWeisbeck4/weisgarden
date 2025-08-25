@@ -6,15 +6,15 @@
 
 #weisgarden__search {
   --pagefind-ui-primary: var(--color-accent);
-    --pagefind-ui-text: var(--color-global-text);
-    --pagefind-ui-background: var(--color-zinc-100);
-    --pagefind-ui-border: var(--color-zinc-300);
-    --pagefind-ui-border-width: 1px;
+  --pagefind-ui-text: var(--color-global-text);
+  --pagefind-ui-background: var(--color-zinc-100);
+  --pagefind-ui-border: var(--color-zinc-300);
+  --pagefind-ui-border-width: 1px;
   
-    [data-theme="dark"] & {
-      --pagefind-ui-background: var(--color-zinc-800);
-      --pagefind-ui-border: var(--color-zinc-500);
-    }
+  [data-theme="dark"] & {
+    --pagefind-ui-background: var(--color-zinc-800);
+    --pagefind-ui-border: var(--color-zinc-500);
+  }
 }
 
 #weisgarden__search .pagefind-ui__search-clear {

@@ -19,6 +19,14 @@ export const siteConfig: SiteConfig = {
   url: "https://andrewsdigitalgarden.netlify.app",
 };
 
+export const navbarLinks: { path: string; title: string }[] = [
+      { path: 'About', title: 'About' },
+      { path: 'Notes', title: 'Notes' },
+      { path: 'Posts', title: 'Posts' },
+      { path: 'Projects', title: 'Projects' },
+      { path: 'Links', title: 'Links' },
+      { path: 'Support', title: 'Support' },
+];
 
 // https://expressive-code.com/reference/configuration/
 export const expressiveCodeOptions: AstroExpressiveCodeOptions = {
