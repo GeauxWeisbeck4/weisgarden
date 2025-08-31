@@ -20,12 +20,12 @@ export const siteConfig: SiteConfig = {
 };
 
 export const navbarLinks: { path: string; title: string }[] = [
-      { path: 'About', title: 'About' },
-      { path: 'Notes', title: 'Notes' },
-      { path: 'Posts', title: 'Posts' },
-      { path: 'Projects', title: 'Projects' },
-      { path: 'Links', title: 'Links' },
-      { path: 'Support', title: 'Support' },
+      { path: 'about', title: 'About' },
+      { path: 'notes', title: 'Notes' },
+      { path: 'posts', title: 'Posts' },
+      { path: 'projects', title: 'Projects' },
+      { path: 'links', title: 'Links' },
+      { path: 'support', title: 'Support' },
 ];
 
 // https://expressive-code.com/reference/configuration/
