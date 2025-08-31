@@ -16,7 +16,7 @@ export const siteConfig: SiteConfig = {
   ogLocale: "en_US",
   title: "WeisGarden",
 	subTitle: "🌿 Andrew's Digital Garden",
-  url: "https://andrewsdigitalgarden.netlify.app",
+  url: "https://weisgarden.netlify.app",
 };
 
 export const navbarLinks: { path: string; title: string }[] = [

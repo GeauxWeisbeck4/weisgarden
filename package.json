@@ -15,7 +15,6 @@
     "@astrojs/mdx": "^4.3.4",
     "@astrojs/netlify": "^6.5.7",
     "@astrojs/sitemap": "^3.5.0",
-    "@iconify-json/mdi": "^1.2.3",
     "@pagefind/default-ui": "^1.3.0",
     "@tailwindcss/vite": "^4.1.11",
     "@types/alpinejs": "^3.13.11",
@@ -47,6 +46,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.0",
+    "@iconify-json/mdi": "^1.2.3",
+    "@iconify-json/simple-icons": "^1.2.49",
     "@tailwindcss/typography": "^0.5.16",
     "@typescript-eslint/parser": "^8.39.1",
     "eslint": "^9.33.0",

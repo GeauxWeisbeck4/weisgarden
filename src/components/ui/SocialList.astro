@@ -1,42 +1,77 @@
 ---
-import { Icon } from "astro-icon/components";
+import { Icon } from 'astro-icon/components';
 
-/** 
+/**
  * Uses https://astroicon.dev/getting-started/
  * Find icons via guide: https://www.astroicon.dev/guides/customization/#open-source-icon-sets
  * Only installed pack is: @iconify-json/mdi
  */
 const socialLinks: {
-  friendlyName: string;
-  isWebmention?: boolean;
-  link: string;
-  name: string;
+	friendlyName: string;
+	isWebmention?: boolean;
+	link: string;
+	name: string;
 }[] = [
+	{
+		friendlyName: 'Github',
+		link: 'https://github.com/geauxweisbeck4/weisgarden',
+		name: 'mdi:github',
+	},
   {
-    friendlyName: "Github",
-    link: "https://github.com/geauxweisbeck4/weisgarden",
-    name: "mdi:github",
+    friendlyName: 'Gitlab',
+    link: 'https://gitlab.com/geauxweisbeck4',
+    name: 'simple-icons:gitlab',
   },
+	{
+		friendlyName: 'Mastodon',
+		link: 'https://fosstodon.org/@GeauxWeisbeck4',
+		name: 'mdi:mastodon',
+	},
+	{
+		friendlyName: 'LinkedIn',
+		link: 'https://linkedin.com/in/geauxweisbeck4',
+		name: 'mdi:linkedin-box',
+	},
+	{
+		friendlyName: 'Threads',
+		link: 'https://www.threads.com/@geauxweisbeck4',
+		name: 'simple-icons:threads',
+	},
+	{
+		friendlyName: 'Bluesky',
+		link: 'https://geauxweisbeck4.bsky.social',
+    name: 'simple-icons:blue-sky',
+	},
+  {
+    friendlyName: 'Twitter',
+    link: 'https://twitter.com/geauxweisbeck4',
+    name: 'simple-icons:twitter'
+  }
 ];
 ---
 
 <div class="flex flex-wrap items-end gap-x-2">
-  <p>Find me on</p>
-  <ul class="flex flex-1 items-center gap-x-2 sm:flex-initial">
-    {
-      socialLinks.map(({ friendlyName, isWebmention, link, name }) => (
-        <li class="flex">
-          <a
-            class="hover:text-link inline-block"
-            href={link}
-            rel={`noreferrer ${isWebmention ? "me authn" : ""}`}
-            target="_blank"
-          >
-            <Icon aria-hidden="true" class="h-8 w-8" focusable="false" name={name} />
-            <span class="sr-only">{friendlyName}</span>
-          </a>
-        </li>
-      ))
-    }
-  </ul>
+	<p>Find me on</p>
+	<ul class="flex flex-1 items-center gap-x-2 sm:flex-initial">
+		{
+			socialLinks.map(({ friendlyName, isWebmention, link, name }) => (
+				<li class="flex">
+					<a
+						class="hover:text-link inline-block"
+						href={link}
+						rel={`noreferrer ${isWebmention ? 'me authn' : ''}`}
+						target="_blank"
+					>
+						<Icon
+							aria-hidden="true"
+							class="h-8 w-8"
+							focusable="false"
+							name={name}
+						/>
+						<span class="sr-only">{friendlyName}</span>
+					</a>
+				</li>
+			))
+		}
+	</ul>
 </div>

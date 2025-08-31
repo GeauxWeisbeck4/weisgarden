@@ -7,9 +7,9 @@ import { navbarLinks, siteConfig } from '../../site.config';
 <header class="group relative flex items-center" id="main-header">
 	<div class="flex-col px-4 py-6 mt-2 w-full">
 		<!-- Title area-->
-		<div class="mb-4 text-center max-w-4xl">
+		<div class="mb-4 text-left max-w-4xl">
 			<h1
-				class="text-lg sm:text-xl md:text-2xl lg:text-3xl dark:text-global-text"
+				class="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl dark:text-global-text"
 			>
 				<a
 					aria-current={Astro.url.pathname === '/' ? 'page' : false}
@@ -68,7 +68,7 @@ import { navbarLinks, siteConfig } from '../../site.config';
 		<div class="flex">
 			<nav
 				aria-label="Main menu"
-				class="md:text-lg flex-1 text-center text-lg font-medium text-gray-700 lg:text-2xl group-[.menu-open]:z-50 group-[.menu-open]:flex hidden sm:inline-block"
+				class="md:text-lg flex-1 text-left text-lg font-medium text-gray-700 lg:text-2xl group-[.menu-open]:z-50 group-[.menu-open]:flex hidden sm:inline-block"
 				id="navigation-menu"
 			>
 				{
