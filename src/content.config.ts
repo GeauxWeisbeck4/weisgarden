@@ -1,5 +1,5 @@
 import { defineCollection, z } from 'astro:content';
-import { glob } from 'astro/loaders';
+import { glob, file } from 'astro/loaders';
 
 function removeDupsAndLowerCase(array: string[]) {
   return [...new Set(array.map((str) => str.toLowerCase()))];
