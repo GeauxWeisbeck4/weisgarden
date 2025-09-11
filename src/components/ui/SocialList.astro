@@ -40,7 +40,7 @@ const socialLinks: {
 	{
 		friendlyName: 'Bluesky',
 		link: 'https://geauxweisbeck4.bsky.social',
-    name: 'simple-icons:blue-sky',
+    name: 'simple-icons:bluesky',
 	},
   {
     friendlyName: 'Twitter',
@@ -50,8 +50,8 @@ const socialLinks: {
 ];
 ---
 
-<div class="flex flex-wrap items-end gap-x-2">
-	<p>Find me on</p>
+<div class="flex flex-wrap items-end gap-x-2 mt-6">
+	<p class="text-lg font-bold">Find me on</p>
 	<ul class="flex flex-1 items-center gap-x-2 sm:flex-initial">
 		{
 			socialLinks.map(({ friendlyName, isWebmention, link, name }) => (

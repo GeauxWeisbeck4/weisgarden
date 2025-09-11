@@ -18,7 +18,6 @@ const {
 } = Astro.props;
 ---
 
-<!doctype html>
 <html class="scroll-smooth" lang={siteConfig.lang}>
 	<head>
 		<BaseHead
@@ -32,15 +31,15 @@ const {
 	<body
 		class="bg-global-bg  dark:text-global-text mx-auto flex min-h-screen max-w-5xl flex-col font-mono text-lg font-normal antialiased sm:px-8"
 	>
-		<SkipLink />
 		<ThemeProvider />
+		<SkipLink />
 		<Header />
 		<main id="main">
 			<slot />
 		</main>
 		<Footer />
 
-		<script is:inline type="speculationrules">
+		<!-- <script is:inline type="speculationrules">
 			window.speculationrules = {
 				"prefetch": [
 					{
@@ -59,6 +58,6 @@ const {
 					}
 				]
 			};
-		</script>
+		</script> -->
 	</body>
 </html>

@@ -7,7 +7,6 @@ import tailwindcss from '@tailwindcss/vite';
 import alpinejs from '@astrojs/alpinejs';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
-import netlify from '@astrojs/netlify';
 import icon from 'astro-icon';
 import expressiveCode from 'astro-expressive-code';
 import webmanifest from 'astro-webmanifest';
@@ -65,8 +64,7 @@ export default defineConfig({
       WEBMENTION_URL: envField.string({ context: "client", access: "public", optional: true }),
       WEBMENTION_PINGBACK: envField.string({ context: "client", access: "public", optional: true }),
     },
-  },
-  adapter: netlify()
+  }
 });
 
 function rawFonts(ext: string[]) {

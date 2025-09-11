@@ -1,12 +1,34 @@
 ---
+import { type CollectionEntry, getCollection } from 'astro:content';
+import SocialList from '../components/ui/SocialList.astro';
+import PostPreview from '../components/blog/PostPreview.astro';
+import NotePreview from '../components/note/NotePreview.astro';
+import { getAllPosts } from '../utils/post';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { collectionDateSort } from '../utils/date';
+
+// Posts
+const MAX_POSTS = 10;
+const allPosts = await getAllPosts();
+const allPostsByDate = allPosts
+	.sort(collectionDateSort)
+	.slice(0, MAX_POSTS) as CollectionEntry<'post'>[];
+
+	// Pinned Posts, set to max of 3
+const MAX_PINNED_POSTS = 3;
+const pinnedPosts = allPostsByDate.filter((p) => p.data.pinned).slice(0, MAX_PINNED_POSTS);
+
+// Notes
+const MAX_NOTES = 5;
+const allNotes = await getCollection('note');
+const latestNotes = allNotes.sort(collectionDateSort).slice(0, MAX_NOTES);
 
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
 <BaseLayout meta={{ title: "Home" }}>
-	<section class="mx-auto mt-6 flex flex-co px-4 py-6">
+	<section class="mx-auto mt-6 flex flex-col px-4 py-6">
 		<div class="max-w-4xl text-left">
 			<h1 class="text-3xl font-bold mb-4">Meditate. Focus. Create.</h1>
 			<p class="text-md">
@@ -16,68 +38,52 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 				tree of knowledge. This is my digital garden, where I cultivate my
 				thoughts, ideas, and projects.
 			</p>
-			<!-- <p class="mt-2 text-md">
-				If you are not sure where to start, here is a list of site sections with a brief description of each:	
-			</p>
-			<ol class="mt-4 list-inside list-decimal pl-2 text-md">
-				<li>
-					<a
-						class="text-lg font-bold text-sky-600 underline underline-offset-1 hover:text-sky-800 hover:no-underline"
-						href="/notes/catalog">Notes Catalog</a
-					>
-				</li>
-				<ul class="mt-2 list-inside list-none pl-4 text-md">
-					<li>
-						These aren't collected notes, but thoughtful and curated notes that
-						dig deeper than just surface level information. These are notes that
-						I have taken the time to process and think about, and I hope they
-						can be useful to you as well.
-					</li>
-				</ul>
-				<li class="mt-2">
-					<a
-						class="text-lg font-bold text-sky-600 underline underline-offset-1 hover:text-sky-800 hover:no-underline"
-						href="/notes/catalog">Daily Journal</a
-					>
-				</li>
-				<ul class="mt-2 list-inside list-none pl-4">
-					<li>
-						Everything starts here. This garden is modeled similar to my
-						personal Logseq instance, where I journal daily and then link out to
-						other notes and ideas that I have. This is the heart of the garden,
-						and where most of the growth happens.
-					</li>
-				</ul>
-				<li class="mt-2">
-					<a
-						class="text-lg font-bold text-sky-600 underline underline-offset-1 hover:text-sky-800 hover:no-underline"
-						href="/notes/catalog">Blog Posts</a
-					>
-				</li>
-				<ul class="mt-2 list-inside list-none pl-4">
-					<li>
-						The blog posts are polished and refined pieces of writing that
-						connect notes, ideas, and conclusions I've made from time spent
-						working on projects, reading, writing, and learning. These are the
-						final products that I hope to share with the world, and I hope you
-						find them useful and interesting!
-					</li>
-				</ul>
-				<li class="mt-2">
-					<a
-						class="text-lg font-bold text-sky-600 underline underline-offset-1 hover:text-sky-800 hover:no-underline"
-						href="/notes/catalog">Sprints and Projects</a
-					>
-				</li>
-				<ul class="mt-2 list-inside list-none pl-4 text-md">
-					<li class="text-md">
-						I am a big believer in the power of focused work and sprints to get
-						things done. I am also a big believer in sharing things that work
-						with others, so I am sharing my process for getting things done in
-						the hopes that it might be useful to you as well.
-					</li>
-				</ul>
-			</ol>
-		</div> -->
+			<SocialList />
+		</div>
 	</section>
+
+	<!-- Blog Posts -->
+	<section class="mt-16">
+		{
+			pinnedPosts.length > 0 && (
+				<div class="max-w-4xl text-left mb-6">
+					<h2 class="title text-xl mb-4">Featured Posts</h2>
+					<ul class="space-y-4" role="list">
+						{pinnedPosts.map((p) => (
+							<li class="grid gap-1 sm:grid-cols-[auto_1fr]">
+								<PostPreview post={p} />
+							</li>
+						))}
+					</ul>
+				</div>
+			)
+		}
+	</section>
+
+	<section class="mt-16">
+		<h2 class="text-accent title text-xl mb-6">Recent Posts</h2>
+		<ul class="space-y-4" role="list">
+			{allPostsByDate.map((p) => (
+				<li class="grid gap-1 sm:grid-cols-[auto_1fr]">
+					<PostPreview post={p} />
+				</li>
+			))}
+		</ul>
+	</section>
+	{
+		latestNotes.length > 0 && (
+			<section class="mt-16">
+				<h2 class="title text-xl text-accent mb-6">
+					<a href="/notes/">Notes</a>
+				</h2>
+				<ul class="space-y-6" role="list">
+					{latestNotes.map((note) => (
+						<li>
+							<NotePreview note={note} />
+						</li>
+					))}
+				</ul>
+			</section>
+		)
+	}
 </BaseLayout>

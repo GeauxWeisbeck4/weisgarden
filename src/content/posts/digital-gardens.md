@@ -59,4 +59,6 @@ Linear thinking is a ultimately a myth. Thinking is not only non-linear, it's me
 
 Instead, the goal should be to tap into your network's collective intelligence to create constructive feedback loops.
 
-Hence why you do not keep orphan notes: Every time you write a new note, make sure to go back to previous notes and to interlink them together. Orphan notes do not contribute to the serendipitous creation of new insights. Only by connecting notes together can we go from collector to creator
+Hence why you do not keep orphan notes: Every time you write a new note, make sure to go back to previous notes and to interlink them together. Orphan notes do not contribute to the serendipitous creation of new insights. Only by connecting notes together can we go from collector to creator.
+
+From Brennan Brown's Enjoyment of Work Template
