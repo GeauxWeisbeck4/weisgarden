@@ -5,8 +5,8 @@ publishDate: "14 August 2025"
 tags: ["digital-garden", "about"]
 updatedDate: "15 August 2025"
 coverImage:
-    alt: "Andrew's digital garden office"
-    src: "https://res.cloudinary.com/tar-heel-dev-studio/image/upload/v1743095346/digital_office_uz0qja.png"
+  alt: "Andrew's digital garden office"
+  src: "https://res.cloudinary.com/tar-heel-dev-studio/image/upload/v1743095346/digital_office_uz0qja.png"
 pinned: true
 ---
 

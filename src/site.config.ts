@@ -24,7 +24,7 @@ export const navbarLinks: { path: string; title: string }[] = [
       { path: '/notes/', title: 'Notes' },
       { path: '/posts/', title: 'Posts' },
       { path: '/projects/', title: 'Projects' },
-      { path: '/links/', title: 'Links' },
+      { path: '/tags/', title: 'Tags' },
       { path: '/support/', title: 'Support' },
 ];
 
