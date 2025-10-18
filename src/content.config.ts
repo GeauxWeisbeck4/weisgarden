@@ -67,4 +67,6 @@ const tag = defineCollection({
   }),
 });
 
+
+
 export const collections = { post, note, category, tag };

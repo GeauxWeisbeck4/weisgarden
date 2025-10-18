@@ -11,60 +11,69 @@ const socialLinks: {
 	isWebmention?: boolean;
 	link: string;
 	name: string;
+	color: string;
 }[] = [
 	{
 		friendlyName: 'Github',
 		link: 'https://github.com/geauxweisbeck4/weisgarden',
 		name: 'mdi:github',
+		color: 'text-stone-900',
 	},
-  {
-    friendlyName: 'Gitlab',
-    link: 'https://gitlab.com/geauxweisbeck4',
-    name: 'simple-icons:gitlab',
-  },
+	{
+		friendlyName: 'Gitlab',
+		link: 'https://gitlab.com/geauxweisbeck4',
+		name: 'simple-icons:gitlab',
+		color: 'text-orange-500',
+	},
 	{
 		friendlyName: 'Mastodon',
 		link: 'https://fosstodon.org/@GeauxWeisbeck4',
 		name: 'mdi:mastodon',
+		color: 'text-indigo-600',
+	},
+	{
+		friendlyName: 'Bluesky',
+		link: 'https://geauxweisbeck4.bsky.social',
+		name: 'simple-icons:bluesky',
+		color: 'text-sky-500',
 	},
 	{
 		friendlyName: 'LinkedIn',
 		link: 'https://linkedin.com/in/geauxweisbeck4',
 		name: 'mdi:linkedin-box',
+		color: 'text-blue-400',
 	},
 	{
 		friendlyName: 'Threads',
 		link: 'https://www.threads.com/@geauxweisbeck4',
 		name: 'simple-icons:threads',
+		color: 'text-slate-700',
 	},
+
 	{
-		friendlyName: 'Bluesky',
-		link: 'https://geauxweisbeck4.bsky.social',
-    name: 'simple-icons:bluesky',
+		friendlyName: 'Twitter',
+		link: 'https://twitter.com/geauxweisbeck4',
+		name: 'simple-icons:twitter',
+		color: 'text-sky-500',
 	},
-  {
-    friendlyName: 'Twitter',
-    link: 'https://twitter.com/geauxweisbeck4',
-    name: 'simple-icons:twitter'
-  }
 ];
 ---
 
 <div class="flex flex-wrap items-end gap-x-2 mt-6">
-	<p class="text-lg font-bold">Find me on</p>
-	<ul class="flex flex-1 items-center gap-x-2 sm:flex-initial">
+	<p class="text-2xl mt-6 font-bold">Follow Me On:</p>
+	<ul class="flex flex-1 items-center pl-6 gap-x-2 sm:flex-initial">
 		{
-			socialLinks.map(({ friendlyName, isWebmention, link, name }) => (
+			socialLinks.map(({ friendlyName, isWebmention, link, name, color }) => (
 				<li class="flex">
 					<a
-						class="hover:text-link inline-block"
+						class={`hover:bg-green-100 hover:p-1 p-1 rounded-lg ${color} inline-block`}
 						href={link}
 						rel={`noreferrer ${isWebmention ? 'me authn' : ''}`}
 						target="_blank"
 					>
 						<Icon
 							aria-hidden="true"
-							class="h-8 w-8"
+							class={`h-8 w-8 text-${color} dark:text-white`}
 							focusable="false"
 							name={name}
 						/>
@@ -74,4 +83,5 @@ const socialLinks: {
 			))
 		}
 	</ul>
+	
 </div>

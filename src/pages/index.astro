@@ -14,9 +14,11 @@ const allPostsByDate = allPosts
 	.sort(collectionDateSort)
 	.slice(0, MAX_POSTS) as CollectionEntry<'post'>[];
 
-	// Pinned Posts, set to max of 3
+// Pinned Posts, set to max of 3
 const MAX_PINNED_POSTS = 3;
-const pinnedPosts = allPostsByDate.filter((p) => p.data.pinned).slice(0, MAX_PINNED_POSTS);
+const pinnedPosts = allPostsByDate
+	.filter((p) => p.data.pinned)
+	.slice(0, MAX_PINNED_POSTS);
 
 // Notes
 const MAX_NOTES = 5;
@@ -27,56 +29,52 @@ const latestNotes = allNotes.sort(collectionDateSort).slice(0, MAX_NOTES);
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
-<BaseLayout meta={{ title: "Home" }}>
+<BaseLayout meta={{ title: 'Home' }}>
 	<section class="mx-auto mt-6 flex flex-col px-4 py-6">
 		<div class="max-w-4xl text-left">
-			<h1 class="text-3xl font-bold mb-4">Meditate. Focus. Create.</h1>
-			<p class="text-md">
-				This digital garden is a space for sharing how I synergize critical
-				thinking, problem solving, and focused creativity into ideas, words, and
-				solutions. Everything starts with a seed of an idea, and grows into a
-				tree of knowledge. This is my digital garden, where I cultivate my
-				thoughts, ideas, and projects.
+			<h1 class="text-3xl font-bold mb-4">WeisGarden</h1>
+			<h2 class="text-2xl text-accent-2 font-semibold mb-4">
+				Wisdom. Music. Sports. Coding. Andrew.
+			</h2>
+			<p class="text-md mb-6">
+				A digital garden like no other one you'll ever find... a place of
+				reflection, sharing ideas, ranting about corporations, bopping to hip
+				hop, economic/sports/statistical analysis, philosophical discussion, and
+				especially a place for talking about programming on a deeper level so
+				everyone gets better! I'm a brutally honest person, but I would also say
+				I'm very kind, empathetic, and quite thoughtful. A full-stack developer,
+				entrepreneur, and writer who will try anything more than once,
+				especially if there's a lot of risk involved.
 			</p>
 			<SocialList />
 		</div>
 	</section>
 
+	<h1 class="text-3xl font-bold text-black mt-10">
+		Featured Content
+	</h1>
+
 	<!-- Blog Posts -->
-	<section class="mt-16">
-		{
-			pinnedPosts.length > 0 && (
-				<div class="max-w-4xl text-left mb-6">
-					<h2 class="title text-xl mb-4">Featured Posts</h2>
-					<ul class="space-y-4" role="list">
-						{pinnedPosts.map((p) => (
-							<li class="grid gap-1 sm:grid-cols-[auto_1fr]">
-								<PostPreview post={p} />
-							</li>
-						))}
-					</ul>
-				</div>
-			)
-		}
-	</section>
 
 	<section class="mt-16">
-		<h2 class="text-accent title text-xl mb-6">Recent Posts</h2>
-		<ul class="space-y-4" role="list">
-			{allPostsByDate.map((p) => (
-				<li class="grid gap-1 sm:grid-cols-[auto_1fr]">
-					<PostPreview post={p} />
-				</li>
-			))}
+		<h2 class="text-accent-2 title text-3xl mb-6">Recent Posts</h2>
+		<ul class="space-y-4 grid grid-cols-2" role="list">
+			{
+				allPostsByDate.map((p) => (
+					<li class="grid gap-1 sm:grid-cols-[auto_1fr]">
+						<PostPreview post={p} />
+					</li>
+				))
+			}
 		</ul>
 	</section>
 	{
 		latestNotes.length > 0 && (
 			<section class="mt-16">
-				<h2 class="title text-xl text-accent mb-6">
+				<h2 class="title text-3xl text-accent-2 mb-6">
 					<a href="/notes/">Notes</a>
 				</h2>
-				<ul class="space-y-6" role="list">
+				<ul class="space-y-6 grid grid-cols-2" role="list">
 					{latestNotes.map((note) => (
 						<li>
 							<NotePreview note={note} />
