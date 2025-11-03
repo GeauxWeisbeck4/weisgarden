@@ -9,7 +9,7 @@ const meta = {
 
 <BaseLayout meta={meta}>
 	<section class="mt-12">
-		<h1 class="text-2xl font-bold">Support Andrew</h1>
+		<h1 class="text-4xl font-bold">Support Andrew</h1>
 		<p class="mt-4">
 			You can help support Andrew in various ways that are listed below. Sign up
 			for a subscription on one of the newsletters or creator platforms or
@@ -18,44 +18,169 @@ const meta = {
 		</p>
 	</section>
 
-	<section class="mt-12">
-		<h1 class="text-2xl font-bold">
-			Creator Pages: <strong class="text-sky-600">Ko-Fi</strong>, <strong
-				class="text-yellow-500">Buy Me A Coffee</strong
-			>, and Patreon
-		</h1>
-		<p class="mt-4">
-			If you enjoy Andrew's content and would like to support his work, consider
-			buying him a coffee! Your support helps keep the creativity flowing and is
-			greatly appreciated.
+	<hr class="mt-10" />
+
+	<!-- Creator Platform Section -->
+
+	<section class="mt-8">
+		<h1 class="text-3xl font-bold mb-8 text-center">Creator Pages</h1>
+		<p class="text-lg mb-10">
+			You can support Andrew on the following platforms by making a donation or
+			subscribing to each creator service. Feel free to check out each page to
+			see what is being created and shared if you'd like!
 		</p>
-		<br />
-		<div class="flex gap-6">
-			<a href="https://ko-fi.com/Z8Z2D853F" target="_blank"
-				><img
-					height="60"
-					style="border:0px;height:60px;"
-					src="https://storage.ko-fi.com/cdn/kofi6.png?v=6"
-					border="0"
-					alt="Buy Me a Coffee at ko-fi.com"
-				/></a
+		<div class="grid grid-cols-6 gap-8">
+			<!-- Ko-Fi Section -->
+			<div
+				class="border-2 rounded-lg flex flex-col border-black col-span-3 px-8 py-4"
 			>
-			<a href="https://www.buymeacoffee.com/GeauxWeisbeck4" target="_blank"
-				><img
-					src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
-					alt="Buy Me A Coffee"
-					style="height: 60px !important;width: 217px !important;"
-				/></a
-			>
-			<a
-				href="https://patreon.com/GeauxWeisbeck4dev?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_creator&utm_content=copyLink"
-				target="_blank"
-				><img
-					src="https://res.cloudinary.com/tar-heel-dev-studio/image/upload/v1761535769/image_post-patreon-logo_mrkq5z.png"
-					alt="Patreon logo"
-					class="h-16 w-28 border-black border-1 rounded-lg"
+				<!-- <div class="w-[66%]"> -->
+				<h1 class="text-2xl font-bold">
+					<a
+						href="https://ko-fi.com/geauxweisbeck4"
+						class="hover:text-orange-500 hover:underline"
+						>Support Andrew on Ko-Fi</a
+					>
+				</h1>
+				<p class="text-md mt-8">
+					If you enjoy Andrew's content and would like to support his work,
+					consider buying him a coffee! Your support helps keep the creativity
+					flowing and is greatly appreciated.
+				</p>
+				<br />
+				<div class="flex gap-6 mt-6">
+					<a href="https://ko-fi.com/Z8Z2D853F" target="_blank"
+						><img
+							height="40"
+							style="border:0px;height:40px;"
+							src="https://storage.ko-fi.com/cdn/kofi6.png?v=6"
+							border="0"
+							alt="Buy Me a Coffee at ko-fi.com"
+						/></a
+					>
+				</div>
+				<!-- </div> -->
+				<!-- <div class="content-center items-center px-8">
+				<img
+					class="w-84 h-24"
+					src="https://res.cloudinary.com/tar-heel-dev-studio/image/upload/c_pad,w_492,h_134/v1761708500/kofi_logo_u0evfe.png"
+					alt="Ko-Fi Logo"
 				/>
-			</a>
+			</div> -->
+			</div>
+
+			<!-- Buy Me A Coffee Section -->
+			<div
+				class="border-2 rounded-lg border-black flex flex-col col-span-3 px-8 py-4"
+			>
+				<!-- <div class="w-[66%] text-right"> -->
+				<h1 class="text-2xl font-bold">
+					<a
+						class="hover:text-yellow-300 hover:underline"
+						href="https://buymeacoffee.com/geauxweisbeck4"
+						>Buy Andrew a Coffee</a
+					>
+				</h1>
+				<p class="text-md mt-8">
+					If you enjoy Andrew's content and would like to support his work,
+					consider buying him a coffee! Your support helps keep the creativity
+					flowing and is greatly appreciated.
+				</p>
+				<br />
+				<div class="flex gap-6 mt-6">
+					<a href="https://www.buymeacoffee.com/GeauxWeisbeck4" target="_blank"
+						><img
+							src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
+							alt="Buy Me A Coffee"
+							style="height: 40px !important;width: 143px !important;"
+						/></a
+					>
+				</div>
+				<!-- </div> -->
+				<!-- <div class="content-center items-center px-8">
+				<img
+					class="w-84 h-24"
+					src="https://res.cloudinary.com/tar-heel-dev-studio/image/upload/v1761723908/bmc-full_logo_gs3xvu.png"
+					alt="Buy Me A Coffee Logo"
+				/>
+			</div> -->
+			</div>
+
+			<!-- Patreon Section -->
+			<div
+				class="border-2 rounded-lg border-black flex flex-col col-span-3 px-8 py-4"
+			>
+				<!-- <div class="w-[66%]"> -->
+				<h1 class="text-2xl font-bold">Support Andrew on Patreon</h1>
+				<p class="text-md mt-8">
+					Patreon is a great platform for supporting creators on a monthly basis
+					and it offers a shop platform where patrons can purchase exclusive
+					merchandise. Consider becoming a patron today to help support Andrew's
+					work!
+				</p>
+				<br />
+				<div class="flex gap-6 mt-6">
+					<a
+						class="bg-black flex flex-row gap-2 text-white dark:bg-white dark:text-black px-2 py-2 rounded-lg hover:opacity-80 text-sm"
+						href="https://patreon.com/GeauxWeisbeck4dev?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_creator&utm_content=copyLink"
+						target="_blank"
+						><img
+							class="w-6 h-6"
+							src="https://res.cloudinary.com/tar-heel-dev-studio/image/upload/v1761768610/PATREON_SYMBOL_1_WHITE_RGB_vtjmqc.png"
+							alt="Patreon symbol"
+						/>
+						Support on Patreon
+					</a>
+				</div>
+				<!-- </div> -->
+
+				<!-- <div class="content-center items-center px-8">
+				<img
+					class="w-84 h-24"
+					src="https://res.cloudinary.com/tar-heel-dev-studio/image/upload/v1761768611/PATREON_Lockup_Horizontal_BLACK_RGB_dkd0of.png"
+					alt="Patreon Logo"
+				/>
+			</div> -->
+			</div>
+
+			<!-- Liberapay Section -->
+			<div
+				class="border-2 rounded-lg border-black flex flex-col px-8 py-4 col-span-3"
+			>
+				<!-- <div class="w-[66%] text-right"> -->
+				<h1 class="text-2xl font-bold">
+					<a
+						class="hover:text-yellow-300 hover:underline"
+						href="https://buymeacoffee.com/geauxweisbeck4"
+						>Andrew's Open Source Work</a
+					>
+				</h1>
+				
+				<p class="text-md mt-8">
+					Contributing to open source projects takes a lot of time and effort.
+					If you find Andrew's open source contributions helpful, consider
+					supporting his work on Liberapay, a platform dedicated to funding open
+					source creators.
+				</p>
+				<br />
+				<!-- <div class="flex gap-6 justify-end"> -->
+				<a class="mt-6" href="https://liberapay.com/weismind_creative/donate"
+					><img
+						alt="Donate using Liberapay"
+						src="https://liberapay.com/assets/widgets/donate.svg"
+						style="height: 40px !important;"
+					/></a
+				>
+				<!-- </div> -->
+				<!-- </div> -->
+				<!-- <div class="content-center items-center px-8">
+				<img
+					class="w-48 h-48"
+					src="https://res.cloudinary.com/tar-heel-dev-studio/image/upload/v1762141231/liberapay_logo_black-on-yellow_200px_pisk8g.png"
+					alt="Liberapay Logo"
+				/>
+			</div> -->
+			</div>
 		</div>
 	</section>
 </BaseLayout>

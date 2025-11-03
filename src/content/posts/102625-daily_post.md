@@ -7,7 +7,7 @@ updatedDate: "26 October 2025"
 coverImage:
   alt: "Andrew's digital garden office"
   src: "https://res.cloudinary.com/tar-heel-dev-studio/image/upload/v1743095346/digital_office_uz0qja.png"
-pinned: true
+pinned: false
 ---
 
 ## 9:24 PM - Sunday Evening
