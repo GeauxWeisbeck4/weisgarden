@@ -3,11 +3,8 @@ title: "October 18th, 2025 - Daily Post"
 description: "Finally getting back on track with stuff today, so I am going to step into the role of writer and let people get to know me a bit more today."
 publishDate: "18 October 2025"
 tags: ["digital-garden", "daily-post", "weisgarden"]
-updatedDate: "18 October 2025"
-coverImage:
-  alt: "Andrew's digital garden office"
-  src: "https://res.cloudinary.com/tar-heel-dev-studio/image/upload/v1743095346/digital_office_uz0qja.png"
 pinned: true
+monthCollection: "October"
 ---
 
 ## 10:19 PM EST - Saturday Night @Wegman's in Chapel Hill, NC

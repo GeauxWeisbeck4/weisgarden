@@ -23,7 +23,7 @@ export const navbarLinks: { path: string; title: string }[] = [
       { path: '/about/', title: 'About' },
       { path: '/notes/', title: 'Notes' },
       { path: '/posts/', title: 'Posts' },
-      { path: '/projects/', title: 'Projects' },
+      { path: '/journals/', title: 'Journal' },
       { path: '/tags/', title: 'Tags' },
       { path: '/support/', title: 'Support' },
 ];

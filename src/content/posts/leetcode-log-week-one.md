@@ -5,6 +5,7 @@ publishDate: "05 September 2025"
 tags: ["leetcode-log", "week-one", "digital-garden"]
 updatedDate: "15 September 2025"
 pinned: true
+category: "Interview Prep"
 ---
 
 ## LeetCode Log Week One (09.01.25 - 09.07.25)

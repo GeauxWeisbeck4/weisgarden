@@ -3,11 +3,8 @@ title: "October 3rd, 2025 Daily Post"
 description: "Today I begin sharing a daily writing practice one here. It will be interesting to see if anybody cares what goes on here :)"
 publishDate: "03 October 2025"
 tags: ["digital-garden", "daily-post", "weisgarden"]
-updatedDate: "03 October 2025"
-coverImage:
-  alt: "Andrew's digital garden office"
-  src: "https://res.cloudinary.com/tar-heel-dev-studio/image/upload/v1743095346/digital_office_uz0qja.png"
 pinned: false
+monthCollection: "October"
 ---
 
 ## 5:34 PM - It's Friday afternoon annnddd:

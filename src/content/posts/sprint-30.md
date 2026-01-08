@@ -8,6 +8,7 @@ coverImage:
   alt: "Sprint 30 post cover image"
   src: "https://res.cloudinary.com/tar-heel-dev-studio/image/upload/v1757807580/sprint30_a1gikw.png"
 pinned: true
+category: "WeisGarden"
 ---
 
 ## Sprint 30 (09/08 - 09/21)

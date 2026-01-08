@@ -2,6 +2,7 @@
 title: "Mdast Utils"
 publishDate: "2025-08-26T11:23:00Z"
 description: "Notes about using the utility tools available to work with mdast syntax trees."
+category: "Programming"
 ---
 
 TODO: Make notes from README.md file on [mdast Github page](https://github.com/syntax-tree/mdast?tab=readme-ov-file).

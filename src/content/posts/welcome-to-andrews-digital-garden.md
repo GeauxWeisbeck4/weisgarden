@@ -8,6 +8,7 @@ coverImage:
     alt: "Andrew's digital garden office"
     src: "https://res.cloudinary.com/tar-heel-dev-studio/image/upload/v1743095346/digital_office_uz0qja.png"
 pinned: true
+category: "WeisGarden"
 ---
 
 Hey there! My name is Andrew and this is my personal website and digital garden. I write about all sorts of stuff here - you'll read about sports, programming, psychology, business, philosophy, and maybe even a little bit of creative fiction writing from time to time. There are no limits, no rules, and no creative judgment on this site!

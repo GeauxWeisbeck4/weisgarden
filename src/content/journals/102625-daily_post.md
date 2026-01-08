@@ -3,11 +3,8 @@ title: "October 26th, 2025 Daily Post"
 description: "Sundays are not my favorite, Mondays may be even less favorable, but money is by far the worst. I explain why in this post."
 publishDate: "26 October 2025"
 tags: ["capitalism", "daily-post", "digital-garden", "weisgarden"]
-updatedDate: "26 October 2025"
-coverImage:
-  alt: "Andrew's digital garden office"
-  src: "https://res.cloudinary.com/tar-heel-dev-studio/image/upload/v1743095346/digital_office_uz0qja.png"
 pinned: false
+monthCollection: "October"
 ---
 
 ## 9:24 PM - Sunday Evening

@@ -7,6 +7,7 @@ updatedDate: "10 September 2025"
 coverImage:
   alt: "v0.0.1 Site Screenshot"
   src: "https://res.cloudinary.com/tar-heel-dev-studio/image/upload/v1757517722/v010_xocwwf.png"
+category: "WeisGarden"
 ---
 
 ## v0.0.1 Release Notes

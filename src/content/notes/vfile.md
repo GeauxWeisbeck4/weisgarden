@@ -2,6 +2,7 @@
 title: "vfile"
 publishDate: "2025-08-26T11:23:00Z"
 description: "Notes on the unified.js vfile open source project."
+category: "JavaScript"
 ---
 
 TODO: Make notes on README.md for vfile

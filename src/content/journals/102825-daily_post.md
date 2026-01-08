@@ -3,11 +3,8 @@ title: "October 28th, 2025 Daily Post"
 description: "Today is going to be a focus on what I'm learning reading the Architecture of Open Source Applications books by Greg Wilson, which is going to be a recurring topic for the next few days.."
 publishDate: "28 October 2025"
 tags: ["software-architecture", "daily-post", "digital-garden", "weisgarden"]
-updatedDate: "28 October 2025"
-coverImage:
-  alt: "Andrew's digital garden office"
-  src: "https://res.cloudinary.com/tar-heel-dev-studio/image/upload/v1743095346/digital_office_uz0qja.png"
 pinned: true
+monthCollection: "October"
 ---
 
 ## 10:55 PM - Tuesday Evening

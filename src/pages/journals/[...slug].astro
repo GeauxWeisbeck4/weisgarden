@@ -1,0 +1,24 @@
+---
+import { render } from "astro:content";
+import { getAllJournals } from "../../utils/journal";
+import JournalLayout from "../../layouts/JournalLayout.astro";
+import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
+
+// If you're using an adaptor in SSR mode, getStaticPaths won't work
+export const getStaticPaths = (async () => {
+  const blogEntries = await getAllJournals();
+  return blogEntries.map((journal) => ({
+    params: { slug: journal.id },
+    props: { journal },
+  }));
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { journal } = Astro.props;
+const { Content } = await render(journal);
+---
+
+<JournalLayout journal={journal}>
+  <Content />
+</JournalLayout>

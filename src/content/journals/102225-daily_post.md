@@ -3,11 +3,8 @@ title: "October 22nd, 2025 - Daily Post"
 description: "It's been a few days since my last daily post (lost my computer... seriously) and I'm back with some exciting findings to share with you all!"
 publishDate: "22 October 2025"
 tags: ["digital-garden", "daily-post", "weisgarden"]
-updatedDate: "22 October 2025"
-coverImage:
-  alt: "Andrew's digital garden office"
-  src: "https://res.cloudinary.com/tar-heel-dev-studio/image/upload/v1743095346/digital_office_uz0qja.png"
 pinned: true
+monthCollection: "October"
 ---
 
 ## 4:35 PM EST - Laying in the Grass... somewhere under the sun in Durham, NC 😎

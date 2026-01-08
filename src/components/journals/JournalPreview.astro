@@ -1,0 +1,24 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import FormattedDate from "../ui/FormattedDate.astro";
+import type { HTMLTag, Polymorphic } from "astro/types";
+
+type Props<Tag extends HTMLTag> = Polymorphic<{ as: Tag }> & {
+  journal: CollectionEntry<"journal">;
+  withDesc?: boolean;
+};
+
+const { as: Tag = "div", journal, withDesc = false } = Astro.props;
+---
+
+<FormattedDate
+  class="min-w-30 font-semibold text-gray-600 dark:text-gray-400"
+  date={journal.data.publishDate}
+/>
+<Tag>
+  {journal.data.draft && <span class="text-red-500">(Draft)</span>}
+  <a href={`/journals/${journal.id}`} class="weisgarden-link">
+    {journal.data.title}
+  </a>
+</Tag>
+{withDesc && <q class="line-clamp-3 italic">{journal.data.description}</q>}

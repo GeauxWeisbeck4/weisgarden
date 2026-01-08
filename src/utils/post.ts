@@ -17,7 +17,7 @@ export async function getTagMeta(tag: string): Promise<CollectionEntry<"tag"> | 
 
 /** 
  * Groups post by year (based on option siteConfig.sortPostsByUpdatedDate), using the year as the key. 
- * Note: Doesn't filter draft posts, pass it hte result of getAllPosts above to do so.
+ * Note: Doesn't filter draft posts, pass it the result of getAllPosts above to do so.
  */
 export function groupPostsByYear(posts: CollectionEntry<"post">[]) {
   return posts.reduce<Record<string, CollectionEntry<"post">[]>>((acc, post) => {
@@ -30,8 +30,13 @@ export function groupPostsByYear(posts: CollectionEntry<"post">[]) {
   }, {});
 }
 
-/** 
- * Returns all tags created from posts (inc duplicate tags)
+
+/**
+ * Returns all tags from posts
+ *
+ * @export getAllTags
+ * @param {CollectionEntry<"post">[]} posts 
+ * @returns {*} 
  */
 export function getAllTags(posts: CollectionEntry<"post">[]) {
   return posts.flatMap((post) => [...post.data.tags]);
