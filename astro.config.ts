@@ -7,6 +7,9 @@ import icon from 'astro-icon';
 import mdx from '@astrojs/mdx';
 
 
+import expressiveCode from 'astro-expressive-code';
+
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://weisgarden.netlify.app",
@@ -17,9 +20,5 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
 
-  integrations: [
-    sitemap(), 
-    icon(), 
-    mdx(),
-  ],
+  integrations: [sitemap(), icon(), mdx(), expressiveCode()],
 });

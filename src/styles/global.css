@@ -1,2 +1,13 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+
+
+
+
+/* Dashed line grid paper like background */
+/* .dashed-grid-paper {
+  background-color: #d5ffd7;
+  background-image:  radial-gradient(circle, #5dba9b 0.72px, transparent 0.72px), radial-gradient(circle, #5dba9b 0.72px, transparent 0.72px) ;
+  background-size: 4.5px 18px, 18px 4.5px;
+  background-position: -2.25px -9px, -9px -2.25px;
+} */
