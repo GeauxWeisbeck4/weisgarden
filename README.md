@@ -1,4 +1,4 @@
-# WeisGarden 
+# WeisGarden
 
 My digital garden, created with Astro and made possible by the [Cactus Theme](https://github.com/chrismwilliams/astro-theme-cactus/) by [@chrismwilliams](https://github.com/chrismwilliams) - seriously, thank you for the sick setup.
 

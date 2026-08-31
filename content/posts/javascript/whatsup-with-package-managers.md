@@ -19,8 +19,6 @@ Well, as it turns out with almost everything related to JavaScript development t
 
 ## Package Managers Are To Be Taken Super Seriously
 
-Does anybody actually like their favorite package manager? Probably not, but not because its their favorite package manager, it's because they're still using `npm`. One of my biggest takeaways from this 
-
-
+Does anybody actually like their favorite package manager? Probably not, but not because its their favorite package manager, it's because they're still using `npm`. One of my biggest takeaways from this.
 
 [1] Heh, see what I did there?
