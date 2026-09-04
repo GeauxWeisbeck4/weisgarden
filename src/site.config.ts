@@ -18,8 +18,8 @@ export const siteConfig: SiteConfig = {
 	// HTML lang property, found in src/layouts/Base.astro L:18 & astro.config.ts L:48
 	lang: "en-US",
 	// Meta property, found in src/components/BaseHead.astro L:42
-  ogLocale: "en_US",
-  // Determines whether to show the logo in the templates header
+	ogLocale: "en_US",
+	// Determines whether to show the logo in the templates header
 	showLogo: true,
 	// Date.prototype.toLocaleDateString() parameters, found in src/utils/date.ts.
 	date: {
@@ -42,12 +42,32 @@ export const menuLinks: { path: string; title: string }[] = [
 		title: "About",
 	},
 	{
+		path: "/journal/",
+		title: "Journal",
+	},
+	{
 		path: "/posts/",
 		title: "Blog",
 	},
 	{
 		path: "/notes/",
 		title: "Notes",
+	},
+	{
+		path: "/projects/",
+		title: "Projects",
+	},
+	{
+		path: "/tags/",
+		title: "Tags",
+	},
+	{
+		path: "/garden/",
+		title: "Digital Garden",
+	},
+	{
+		path: "/support",
+		title: "Support",
 	},
 ];
 
