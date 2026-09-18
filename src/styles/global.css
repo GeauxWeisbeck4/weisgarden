@@ -16,48 +16,55 @@
 @property --color-global-bg {
 	syntax: "<color>";
 	inherits: true;
-	initial-value: oklch(98.48% 0 0);
+	initial-value: #fbfff1;
 }
 @property --color-global-text {
 	syntax: "<color>";
 	inherits: true;
-	initial-value: oklch(26.99% 0.0096 235.05);
+	initial-value: #2f6690;
 }
+@property --color-title {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: #0077b6;
+}
+
 @property --color-muted {
 	syntax: "<color>";
 	inherits: true;
-	initial-value: oklch(44.6% 0.03 256.802);
+	initial-value: #39afe6;
 }
 @property --color-link {
 	syntax: "<color>";
 	inherits: true;
-	initial-value: oklch(55.44% 0.0431 185.69);
+	initial-value: #52aa5e;
 }
 @property --color-accent {
 	syntax: "<color>";
 	inherits: true;
-	initial-value: oklch(55.27% 0.195 19.06);
+	initial-value: #05668d;
 }
 @property --color-accent-2 {
 	syntax: "<color>";
 	inherits: true;
-	initial-value: oklch(18.15% 0 0);
+	initial-value: #2f6690;
 }
 @property --color-quote {
 	syntax: "<color>";
 	inherits: true;
-	initial-value: oklch(55.27% 0.195 19.06);
+	initial-value: #52aa8a;
 }
 
 /* you could refactor below to use light-dark(), depending on your target audience */
 @theme {
-	--color-global-bg: oklch(98.48% 0 0);
-	--color-global-text: oklch(26.99% 0.0096 235.05);
-	--color-muted: oklch(44.6% 0.03 256.802);
-	--color-link: oklch(55.44% 0.0431 185.69);
-	--color-accent: oklch(55.27% 0.195 19.06);
-	--color-accent-2: oklch(18.15% 0 0);
-	--color-quote: oklch(55.27% 0.195 19.06);
+	--color-global-bg: #fbfff1;
+	--color-global-text: #173b03;
+	--color-title: #0077b6;
+	--color-muted: #39afe6;
+	--color-link: #52aa5e;
+	--color-accent: #05668d;
+	--color-accent-2: #2f6690;
+	--color-quote: #52aa8a;
 }
 
 @layer base {
@@ -72,13 +79,14 @@
 
 		&[data-theme="dark"] {
 			color-scheme: dark;
-			--color-global-bg: oklch(23.64% 0.0045 248);
-			--color-global-text: oklch(83.54% 0 264);
-			--color-muted: oklch(70.7% 0.022 261.325);
-			--color-link: oklch(70.44% 0.1133 349);
-			--color-accent: oklch(70.91% 0.1415 163.7);
-			--color-accent-2: oklch(94.66% 0 0);
-			--color-quote: oklch(94.8% 0.106 136.49);
+			--color-global-bg: #0e4752;
+			--color-global-text: #fee9c0;
+			--color-title: #0faa7e;
+			--color-muted: #a6ed80;
+			--color-link: #07e6cc;
+			--color-accent: #0ee18d;
+			--color-accent-2: #00e2d3;
+			--color-quote: #00d5ff;
 		}
 
 		--color-mode-transition-duration: 300ms;
@@ -124,7 +132,7 @@
 	}
 
 	.title {
-		@apply text-accent-2 text-2xl font-semibold;
+		@apply text-accent text-2xl font-semibold;
 	}
 }
 
@@ -134,8 +142,8 @@
 	--tw-prose-bullets: var(--color-global-text);
 	--tw-prose-code: var(--color-global-text);
 	--tw-prose-headings: var(--color-accent-2);
-	--tw-prose-hr: 0.5px dashed #666;
+	--tw-prose-hr: 0.5px dashed #4a6396;
 	--tw-prose-links: var(--color-global-text);
 	--tw-prose-quotes: var(--color-quote);
-	--tw-prose-th-borders: #666;
+	--tw-prose-th-borders: #4a6396;
 }
