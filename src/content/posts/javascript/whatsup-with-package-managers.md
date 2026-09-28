@@ -2,7 +2,7 @@
 title: "What's the Deal With All These Package Managers in JavaScript Andrew?"
 description: "Sometimes I just wonder why JavaScript has so many package managers until I decide to go investigate. Here are the results of my investigation."
 publishDate: "28 August 2026"
-tags: ["javascript", "jsr", "nodejs", "deno", "npm", "dev-tools"]
+tags: ["javascript", "jsr", "nodejs", "deno", "npm", "seedling"]
 draft: true
 pinned: false
 ---
