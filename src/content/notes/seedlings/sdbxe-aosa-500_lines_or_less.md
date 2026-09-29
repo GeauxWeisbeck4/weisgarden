@@ -1,7 +1,7 @@
 ---
 title: "Software Design By Example, the AOSA Books, and 500 Lines or Less"
 description: "The first collection of some notes and thoughts I have on the wonderful software design learning manuals that have been so critical in my development as a software developer."
-publishDate: "29 Sep 2026"
+publishDate: "2026-09-20T12:29:00Z"
 tags: ["software-design", "python", "javascript", "software-architecture", "greg-wilson", "amy-brown", "tavish-armstrong", "michael-dibarnardo", "open-source", "dev-books", "seedling", "notes"]
 status: ["seedling", "draft"]
 ---

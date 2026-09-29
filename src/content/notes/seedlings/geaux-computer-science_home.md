@@ -1,7 +1,7 @@
 ---
 title: "Geaux Computer Science - Draft Home"
 description: "This home page is a place to keep track of what is going on with this project. It includes a tenative outline, various volumes over different sections of my planned guide, tasks and stories to do, what's been completed, and the index of contents."
-publishDate: "28 Sep 2026"
+publishDate: "2026-09-28T23:23:00Z"
 tags: ["seedling", "draft-home", "geaux-code", "computer-science"]
 status: ["seedling", "draft"]
 ---

@@ -1,0 +1,41 @@
+---
+import PageLayout from "@/layouts/Base.astro";
+
+const meta = {
+	description:
+		"Help support Andrew's journey as a developer and creator - anything and everything is appreciated and welcomed, than you!",
+	title: "Support",
+};
+---
+
+<PageLayout meta={meta}>
+	<h1 class="title mb-12">Support</h1>
+	<div class="prose prose-sm prose-cactus max-w-none">
+		<p>
+			If you would like to support me and my work, you can do so by donating via the links below.
+			Any amount is greatly appreciated and will help me continue to create content and improve my
+			skills as a developer.
+		</p>
+		<!-- TODO: Refactor these links to `config.ts` and style for v1.0.0 -->
+		<ul class="list-inside list-disc" role="list">
+			<li>
+				<a
+					href="https://www.buymeacoffee.com/geauxweisbeck4"
+					target="_blank"
+					rel="noopener noreferrer">Buy Me a Coffee</a
+				>
+			</li>
+			<li>
+				<a href="https://www.patreon.com/geauxweisbeck4" target="_blank" rel="noopener noreferrer"
+					>Patreon</a
+				>
+			</li>
+			<li>
+				<a href="https://ko-fi.com/geauxweisbeck4" target="_blank" rel="noopener noreferrer"
+					>Ko-Fi</a
+				>
+			</li>
+		</ul>
+		<p>Thank you for your support!</p>
+	</div>
+</PageLayout>
