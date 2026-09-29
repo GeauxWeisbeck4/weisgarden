@@ -57,14 +57,15 @@
 
 /* you could refactor below to use light-dark(), depending on your target audience */
 @theme {
-	--color-global-bg: #fbfff1;
-	--color-global-text: #155239;
-	--color-title: #0077b6;
-	--color-muted: #39afe6;
-	--color-link: #52aa5e;
-	--color-accent: #05668d;
-	--color-accent-2: #1dd92a;
+	--color-global-bg: #c7fcf9;
+	--color-global-text: #032c40;
+	--color-title: #20a2e8;
+	--color-muted: #0ccece;
+	--color-link: #34d7f0;
+	--color-accent: #0c91cf;
+	--color-accent-2: #1d9dd9;
 	--color-quote: #52aa8a;
+	--color-note-bg: rgba(121, 185, 158, 0.414);
 }
 
 @layer base {
@@ -80,13 +81,14 @@
 		&[data-theme="dark"] {
 			color-scheme: dark;
 			--color-global-bg: #0e4752;
-			--color-global-text: #fee9c0;
+			--color-global-text: #faf1df;
 			--color-title: #0faa7e;
 			--color-muted: #a6ed80;
 			--color-link: #07e6cc;
 			--color-accent: #0ee18d;
-			--color-accent-2: #00e2d3;
+			--color-accent-2: #00e2a2;
 			--color-quote: #00d5ff;
+			--color-note-bg: #316e5b9c;
 		}
 
 		--color-mode-transition-duration: 300ms;
@@ -134,6 +136,8 @@
 	.title {
 		@apply text-accent text-2xl font-semibold;
 	}
+
+	
 }
 
 @utility prose {
