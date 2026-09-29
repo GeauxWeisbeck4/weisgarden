@@ -1,7 +1,7 @@
 ---
 title: "Software Design By Example, the AOSA Books, and 500 Lines or Less"
 description: "The first collection of some notes and thoughts I have on the wonderful software design learning manuals that have been so critical in my development as a software developer."
-publishDate: "2026-09-20T12:29:00Z"
+publishDate: "2026-09-29T12:29:00Z"
 tags: ["software-design", "python", "javascript", "software-architecture", "greg-wilson", "amy-brown", "tavish-armstrong", "michael-dibarnardo", "open-source", "dev-books", "seedling", "notes"]
 status: ["seedling", "draft"]
 ---
@@ -26,3 +26,4 @@ I. **[Software Design By Example and AOSA Org Books](/src/content/notes/seedling
   a. *[Software Design by Example in JavaScript](https://third-bit.com/sdxjs/)*
   b. *[Software Design by Example in Python](https://third-bit.com/sdxpy/)*
   c. *[Architecture of Open Source Applications, Volume One](https://aosabook.org/en/v1/intro1.html)
+  

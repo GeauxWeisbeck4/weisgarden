@@ -7,4 +7,3 @@ status: ["seedling", "draft"]
 ---
 
 ## Geaux Code's Software Design and Development Process Guide Home
-
