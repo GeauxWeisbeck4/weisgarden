@@ -2,7 +2,7 @@
 title: "WeisGarden v0.1.1"
 description: "Developer story for version v0.1.1 release, a basic release of the project to the public to share content and site."
 publishDate: "27 Aug 2026"
-updatedDate: "18 Sep 2026"
+updatedDate: "20 Oct 2026"
 tags: ["story", "weisgarden", "in-progress"]
 ---
 
@@ -23,8 +23,8 @@ Developer should ensure that the user is able to navigate the site without raisi
   - [ ] Add new Font
   - [x] Finish creating content configurations
   - [x] Create new components
-  - [ ] Deploy
-    - [ ] Surge
+  - [/] Deploy
+    - [x] Surge
     - [ ] Deno Deploy
     - [ ] Netlify
 
@@ -34,3 +34,5 @@ Developer should ensure that the user is able to navigate the site without raisi
   - Updated site colors
   - Picked font and added to design tokens
   - Added new journal entry and update project and story posts
+- **10.20.2026 - Tuesday at 10:00 AM EST**
+  - Added analytics scripts

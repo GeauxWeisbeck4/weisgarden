@@ -24,6 +24,14 @@ export interface SiteMeta {
 	title: string;
 }
 
+/** Analytics */
+export interface OpenPanelData {
+	clientId?: string;
+	trackScreenViews: boolean;
+	trackOutgoingLinks: boolean;
+	trackAttributes: boolean;
+}
+
 /** Webmentions */
 export interface WebmentionsFeed {
 	children: WebmentionsChildren[];
