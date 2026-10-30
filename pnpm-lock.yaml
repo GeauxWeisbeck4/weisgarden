@@ -25,7 +25,7 @@ importers:
         version: 3.7.4
       '@openpanel/astro':
         specifier: ^1.4.1
-        version: 1.4.1(astro@7.3.7(@types/node@26.6.3)(jiti@2.7.0)(yaml@2.9.0))
+        version: 1.4.3(astro@7.3.7(@types/node@26.6.3)(jiti@2.7.0)(yaml@2.9.0))
       '@pagefind/component-ui':
         specifier: ^1.5.2
         version: 1.5.2
@@ -882,16 +882,16 @@ packages:
   '@nodable/entities@3.0.0':
     resolution: {integrity: sha512-8L9xFeTYKhm49xfIypoe2W5wV1m/3Z58kT+7kR9A8OyFxcPduI4VmxaUMQyKYrRjUoLLSXv6EKKID5Tvj9cUVw==}
 
-  '@openpanel/astro@1.4.1':
-    resolution: {integrity: sha512-Pv1SKm4KV3bxDj+2omaakW5+WUDX0ILw33wV0pnsaV4bxnjG+3lUAvhEaSBYfq8Nf6141PdEBL1Kyy+5rQc3Kw==}
+  '@openpanel/astro@1.4.3':
+    resolution: {integrity: sha512-lo6tvlshK7P46i+AGIJpKhGBoB4LMZgLQ4utI9uEGR8+bOBRbWMeBzomnvZo446ii7qgfyTNBJQ7Sgyj7YPM6w==}
     peerDependencies:
-      astro: ^4.0.0 || ^5.0.0
+      astro: ^4.0.0 || ^5.0.0 || ^6.0.0
 
-  '@openpanel/sdk@1.3.1':
-    resolution: {integrity: sha512-mQ5xaBUGXnyRg3qYxwnbVaUYyW7w8u+munrWk/ClnqxEeR2j+FYPiA6noHbHMCFC2aZutYD5OoRzEvw3FBNFxw==}
+  '@openpanel/sdk@1.3.3':
+    resolution: {integrity: sha512-wEx780Q9iUifpzmMbvY72BKFm2OazH3esQ93CHy5PTTNDZBe0VKUDCmILLRmi4qR8ASxjoAd4qc+SW5yM69B+A==}
 
-  '@openpanel/web@1.4.1':
-    resolution: {integrity: sha512-DgUWeocZw+b57YiJjefZPg+6sceR7TdOF8x7Ut75lu3CwcwqGi5jZNPXjikNemGL37aNWXCB4buhcoNan2j7RA==}
+  '@openpanel/web@1.4.3':
+    resolution: {integrity: sha512-uz9Ua4/52RxBg4OxnJ0CwIeRj9aNBGTTfSKikwKJ0Au0nDVA8XR8lknqfa5KDbGaHz3kidCQAQTR26KDWyQAMQ==}
 
   '@oslojs/encoding@1.1.0':
     resolution: {integrity: sha512-70wQhgYmndg4GCPxPPxPGevRKqTIJ2Nh4OkiMWmDAVYsTQ+Ta7Sq+rPevXyXGdzr30/qZBnyOalCszoMxlyldQ==}
@@ -3635,16 +3635,16 @@ snapshots:
 
   '@nodable/entities@3.0.0': {}
 
-  '@openpanel/astro@1.4.1(astro@7.3.7(@types/node@26.6.3)(jiti@2.7.0)(yaml@2.9.0))':
+  '@openpanel/astro@1.4.3(astro@7.3.7(@types/node@26.6.3)(jiti@2.7.0)(yaml@2.9.0))':
     dependencies:
-      '@openpanel/web': 1.4.1
+      '@openpanel/web': 1.4.3
       astro: 7.3.7(@types/node@26.6.3)(jiti@2.7.0)(yaml@2.9.0)
 
-  '@openpanel/sdk@1.3.1': {}
+  '@openpanel/sdk@1.3.3': {}
 
-  '@openpanel/web@1.4.1':
+  '@openpanel/web@1.4.3':
     dependencies:
-      '@openpanel/sdk': 1.3.1
+      '@openpanel/sdk': 1.3.3
       '@rrweb/types': 2.0.0-alpha.20
       rrweb: 2.0.0-alpha.20
 
