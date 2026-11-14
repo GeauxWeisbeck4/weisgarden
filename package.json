@@ -22,7 +22,7 @@
 		"@openpanel/astro": "^1.4.1",
 		"@pagefind/component-ui": "^1.5.2",
 		"@tailwindcss/vite": "4.3.3",
-		"astro": "7.3.7",
+		"astro": "7.4.7",
 		"astro-expressive-code": "^0.44.2",
 		"astro-icon": "^1.2.0",
 		"astro-robots-txt": "^1.0.0",
