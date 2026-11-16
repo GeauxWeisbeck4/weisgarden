@@ -1,0 +1,184 @@
+---
+// Hover / focus previews for `[[wiki-links]]`. Data comes from /notes/previews.json.
+---
+
+<style is:global>
+	@reference "../../styles/global.css";
+
+	.wiki-preview {
+		@apply bg-global-bg text-global-text border-accent/40 pointer-events-auto fixed z-50 w-[min(22rem,calc(100vw-2rem))] rounded-md border p-4 text-xs shadow-xl;
+		opacity: 0;
+		transform: translateY(4px);
+		transition:
+			opacity 120ms ease-out,
+			transform 120ms ease-out;
+	}
+	.wiki-preview[data-open] {
+		opacity: 1;
+		transform: none;
+	}
+	.wiki-preview-meta {
+		@apply mb-1 flex flex-wrap gap-x-2 opacity-70;
+	}
+	.wiki-preview-title {
+		@apply text-accent mb-2 text-sm leading-snug font-semibold;
+	}
+	.wiki-preview-body {
+		@apply line-clamp-6 leading-relaxed;
+	}
+	.wiki-preview-status {
+		@apply mt-3 flex flex-wrap gap-1.5;
+	}
+	.wiki-preview-status span {
+		@apply bg-note-bg rounded px-1.5 py-0.5;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.wiki-preview {
+			transition: none;
+		}
+	}
+</style>
+
+<script>
+	interface Preview {
+		title: string;
+		description: string;
+		excerpt: string;
+		category: string;
+		date: string;
+		status: string[];
+	}
+
+	const SHOW_DELAY = 300;
+	const HIDE_DELAY = 200;
+	const GAP = 8;
+
+	let data: Promise<Record<string, Preview>> | undefined;
+	const loadPreviews = () => {
+		data ??= fetch("/notes/previews.json")
+			.then((r) => (r.ok ? r.json() : {}))
+			.catch(() => ({}));
+		return data;
+	};
+
+	let card: HTMLDivElement | undefined;
+	let activeLink: HTMLAnchorElement | undefined;
+	let showTimer: number | undefined;
+	let hideTimer: number | undefined;
+
+	function getCard() {
+		if (card) return card;
+		card = document.createElement("div");
+		card.className = "wiki-preview";
+		card.id = "wiki-preview";
+		card.setAttribute("role", "tooltip");
+		card.hidden = true;
+		card.addEventListener("pointerenter", () => clearTimeout(hideTimer));
+		card.addEventListener("pointerleave", scheduleHide);
+		document.body.append(card);
+		return card;
+	}
+
+	function render(el: HTMLDivElement, p: Preview) {
+		el.replaceChildren();
+		const meta = document.createElement("div");
+		meta.className = "wiki-preview-meta";
+		for (const text of [p.category, p.date]) {
+			const span = document.createElement("span");
+			span.textContent = text;
+			meta.append(span);
+		}
+		const title = document.createElement("div");
+		title.className = "wiki-preview-title";
+		title.textContent = p.title;
+		const body = document.createElement("p");
+		body.className = "wiki-preview-body";
+		body.textContent = p.description || p.excerpt || "No preview available.";
+		el.append(meta, title, body);
+		if (p.status.length) {
+			const status = document.createElement("div");
+			status.className = "wiki-preview-status";
+			for (const s of p.status) {
+				const span = document.createElement("span");
+				span.textContent = s;
+				status.append(span);
+			}
+			el.append(status);
+		}
+	}
+
+	function position(el: HTMLDivElement, link: HTMLAnchorElement) {
+		// use the line box under the pointer for links that wrap
+		const rect = link.getClientRects()[0] ?? link.getBoundingClientRect();
+		const { offsetWidth: w, offsetHeight: h } = el;
+		const left = Math.min(Math.max(GAP * 2, rect.left), window.innerWidth - w - GAP * 2);
+		const below = rect.bottom + GAP;
+		const top = below + h > window.innerHeight && rect.top - h - GAP > 0 ? rect.top - h - GAP : below;
+		el.style.left = `${left}px`;
+		el.style.top = `${top}px`;
+	}
+
+	async function show(link: HTMLAnchorElement) {
+		const id = link.dataset.wikiTarget;
+		if (!id) return;
+		const preview = (await loadPreviews())[id];
+		if (!preview || activeLink !== link) return;
+		const el = getCard();
+		render(el, preview);
+		el.hidden = false;
+		position(el, link);
+		link.setAttribute("aria-describedby", el.id);
+		requestAnimationFrame(() => el.setAttribute("data-open", ""));
+	}
+
+	function hide() {
+		clearTimeout(showTimer);
+		activeLink?.removeAttribute("aria-describedby");
+		activeLink = undefined;
+		if (card) {
+			card.removeAttribute("data-open");
+			card.hidden = true;
+		}
+	}
+
+	function scheduleHide() {
+		clearTimeout(showTimer);
+		clearTimeout(hideTimer);
+		hideTimer = window.setTimeout(hide, HIDE_DELAY);
+	}
+
+	function scheduleShow(link: HTMLAnchorElement) {
+		clearTimeout(hideTimer);
+		if (activeLink === link) return;
+		hide();
+		activeLink = link;
+		loadPreviews(); // warm the cache while waiting
+		showTimer = window.setTimeout(() => show(link), SHOW_DELAY);
+	}
+
+	const findLink = (target: EventTarget | null) =>
+		target instanceof Element
+			? (target.closest<HTMLAnchorElement>("a.wiki-link[data-wiki-target]") ?? undefined)
+			: undefined;
+
+	document.addEventListener("pointerover", (e) => {
+		if (e.pointerType !== "mouse") return;
+		const link = findLink(e.target);
+		if (link) scheduleShow(link);
+	});
+	document.addEventListener("pointerout", (e) => {
+		const link = findLink(e.target);
+		if (link && !link.contains(e.relatedTarget as Node | null)) scheduleHide();
+	});
+	document.addEventListener("focusin", (e) => {
+		const link = findLink(e.target);
+		if (link) scheduleShow(link);
+	});
+	document.addEventListener("focusout", (e) => {
+		if (findLink(e.target)) scheduleHide();
+	});
+	document.addEventListener("keydown", (e) => {
+		if (e.key === "Escape") hide();
+	});
+	window.addEventListener("scroll", hide, { passive: true });
+</script>

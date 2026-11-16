@@ -1,0 +1,37 @@
+---
+import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
+import NoteListItem from "@/components/note/NoteListItem.astro";
+import { getAllNotes, groupNotesByCategory } from "@/data/note";
+import WikiLayout from "@/layouts/Wiki.astro";
+
+export const getStaticPaths = (async () => {
+	const categories = groupNotesByCategory(await getAllNotes());
+	return categories.map((category) => ({
+		params: { category: category.slug },
+		props: { category },
+	}));
+}) satisfies GetStaticPaths;
+
+export type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { category } = Astro.props;
+
+const meta = {
+	description: `Notes in the ${category.name} category`,
+	title: `${category.name} | Notes`,
+};
+---
+
+<WikiLayout
+	breadcrumbs={[{ text: "Notes", url: "/notes/" }, { text: category.name }]}
+	currentCategory={category.slug}
+	meta={meta}
+>
+	<h1 class="title mb-3">{category.name}</h1>
+	<p class="mb-8 opacity-80">
+		{category.notes.length} note{category.notes.length !== 1 && "s"} in this category
+	</p>
+	<ul class="space-y-4">
+		{category.notes.map((note) => <NoteListItem note={note} />)}
+	</ul>
+</WikiLayout>

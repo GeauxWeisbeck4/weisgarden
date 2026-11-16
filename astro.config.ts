@@ -17,6 +17,7 @@ import {
 	satteriReadingTimePlugin,
 	satteriUnwrapImagesPlugin,
 } from "./src/plugins/satteri";
+import { satteriWikiLinksPlugin } from "./src/plugins/wiki-links";
 import { expressiveCodeOptions, siteConfig } from "./src/site.config";
 
 // https://astro.build/config
@@ -73,6 +74,7 @@ export default defineConfig({
 				satteriReadingTimePlugin(),
 				satteriGithubCardPlugin(),
 				satteriAdmonitionsPlugin(),
+				satteriWikiLinksPlugin(),
 			],
 			hastPlugins: [
 				satteriHeadingIdsPlugin(),

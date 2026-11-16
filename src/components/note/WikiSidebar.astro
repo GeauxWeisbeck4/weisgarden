@@ -1,0 +1,106 @@
+---
+import type { MarkdownHeading } from "astro";
+import WikiToc from "@/components/note/WikiToc.astro";
+import type { NoteCategory } from "@/data/note";
+
+interface Props {
+	categories: NoteCategory[];
+	headings?: MarkdownHeading[] | undefined;
+	/** slug of the category currently being viewed */
+	currentCategory?: string | undefined;
+	/** id of the note currently being viewed */
+	currentNoteId?: string | undefined;
+}
+
+const { categories, currentCategory, currentNoteId, headings = [] } = Astro.props;
+const total = categories.reduce((sum, c) => sum + c.notes.length, 0);
+const isIndex = !currentCategory && !currentNoteId;
+---
+
+<aside aria-label="Notes sidebar" class="wiki-sidebar space-y-4 lg:sticky lg:top-8 lg:max-h-[calc(100vh-4rem)] lg:self-start lg:overflow-y-auto">
+	<WikiToc headings={headings} />
+	<div class="border-accent/30 bg-note-bg/40 rounded-md border p-4">
+		<h2 class="text-accent mb-3 text-xs font-bold tracking-widest uppercase">Categories</h2>
+		<nav>
+			<ul class="space-y-1">
+				<li>
+					<a
+						aria-current={isIndex ? "page" : undefined}
+						class="wiki-sidebar-link"
+						href="/notes/"
+					>
+						<span>All notes</span>
+						<span class="wiki-count">{total}</span>
+					</a>
+				</li>
+				{
+					categories.map((category) => {
+						const active = category.slug === currentCategory;
+						return (
+							<li>
+								<a
+									aria-current={active && !currentNoteId ? "page" : undefined}
+									class:list={["wiki-sidebar-link", active && "is-active"]}
+									href={`/notes/category/${category.slug}/`}
+								>
+									<span>{category.name}</span>
+									<span class="wiki-count">{category.notes.length}</span>
+								</a>
+								{active && (
+									<ul class="border-accent/30 my-1 ms-3 space-y-1 border-s ps-3">
+										{category.notes.map((note) => (
+											<li>
+												<a
+													aria-current={note.id === currentNoteId ? "page" : undefined}
+													class="wiki-sidebar-sublink"
+													href={`/notes/${note.id}/`}
+												>
+													{note.data.title}
+												</a>
+											</li>
+										))}
+									</ul>
+								)}
+							</li>
+						);
+					})
+				}
+			</ul>
+		</nav>
+		<div class="border-accent/30 mt-4 flex flex-wrap gap-x-4 gap-y-1 border-t pt-3 text-xs">
+			<a
+				aria-current={Astro.url.pathname.startsWith("/notes/graph") ? "page" : undefined}
+				class="text-accent font-semibold hover:underline"
+				href={currentNoteId ? `/notes/graph/?focus=${encodeURIComponent(currentNoteId)}` : "/notes/graph/"}
+			>
+				Graph view
+			</a>
+			<a class="text-accent hover:underline" href="/notes/rss.xml">RSS feed</a>
+		</div>
+	</div>
+</aside>
+
+<style>
+	@reference "../../styles/global.css";
+
+	.wiki-sidebar-link {
+		@apply flex items-center justify-between gap-2 rounded px-2 py-1 transition-colors;
+	}
+	.wiki-sidebar-link:hover,
+	.wiki-sidebar-link.is-active,
+	.wiki-sidebar-link[aria-current="page"] {
+		@apply bg-accent/15 text-accent;
+	}
+	.wiki-sidebar-link[aria-current="page"] {
+		@apply font-semibold;
+	}
+	.wiki-count {
+		@apply bg-global-bg/70 rounded px-1.5 text-xs tabular-nums opacity-80;
+	}
+	.wiki-sidebar-sublink {
+		@apply block py-0.5 text-xs leading-snug opacity-80 hover:underline hover:opacity-100;
+	}
+	.wiki-sidebar-sublink[aria-current="page"] {
+		@apply text-accent font-semibold opacity-100;
+	}
+</style>

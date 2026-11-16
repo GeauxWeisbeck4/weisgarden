@@ -1,0 +1,29 @@
+---
+import type { CollectionEntry } from "astro:content";
+import FormattedDate from "@/components/FormattedDate.astro";
+
+interface Props {
+	note: CollectionEntry<"note">;
+}
+
+const { note } = Astro.props;
+---
+
+<li class="border-accent/20 border-b border-dashed pb-4 last:border-b-0">
+	<div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+		<a class="cactus-link text-accent-2 font-semibold" href={`/notes/${note.id}/`}>
+			{note.data.title}
+		</a>
+		<FormattedDate class="shrink-0 text-xs opacity-70" date={note.data.publishDate} />
+	</div>
+	{note.data.description && <p class="mt-1 line-clamp-2 opacity-90">{note.data.description}</p>}
+	{
+		note.data.status.length > 0 && (
+			<ul class="mt-2 flex flex-wrap gap-1.5">
+				{note.data.status.map((s) => (
+					<li class="bg-note-bg rounded px-1.5 py-0.5 text-xs">{s}</li>
+				))}
+			</ul>
+		)
+	}
+</li>

@@ -1,0 +1,83 @@
+---
+import NoteGraph from "@/components/note/NoteGraph.astro";
+import { getAllNotes, getNoteLinks } from "@/data/note";
+import WikiLayout from "@/layouts/Wiki.astro";
+
+const notes = await getAllNotes();
+const links = getNoteLinks(notes);
+const titleOf = new Map(notes.map((n) => [n.id, n.data.title]));
+
+const connections = notes
+	.map((n) => ({
+		note: n,
+		out: links.filter((l) => l.source === n.id).map((l) => l.target),
+		in: links.filter((l) => l.target === n.id).map((l) => l.source),
+	}))
+	.sort((a, b) => b.out.length + b.in.length - (a.out.length + a.in.length));
+
+const meta = {
+	description: "A map of how the notes in this garden link to each other",
+	title: "Graph | Notes",
+};
+---
+
+<WikiLayout breadcrumbs={[{ text: "Notes", url: "/notes/" }, { text: "Graph" }]} meta={meta}>
+	<h1 class="title mb-3">Note graph</h1>
+	<p class="mb-6 opacity-90">
+		{notes.length} notes and {links.length} wiki-link{links.length !== 1 && "s"}. Solid lines are
+		<code>[[wiki-links]]</code>, dashed lines join notes to their category.
+	</p>
+
+	<NoteGraph notes={notes} />
+
+	<section aria-labelledby="connections-heading" class="mt-10">
+		<h2 class="text-accent-2 mb-4 text-lg font-semibold" id="connections-heading">Connections</h2>
+		<ul class="space-y-3">
+			{
+				connections.map(({ note, out, in: incoming }) => (
+					<li class="border-accent/20 border-b border-dashed pb-3 last:border-b-0">
+						<a class="cactus-link text-accent-2 font-semibold" href={`/notes/${note.id}/`}>
+							{note.data.title}
+						</a>
+						{out.length + incoming.length === 0 ? (
+							<p class="mt-1 text-xs opacity-60">No links yet</p>
+						) : (
+							<dl class="mt-1 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs">
+								{out.length > 0 && (
+									<>
+										<dt class="opacity-70">Links to</dt>
+										<dd>
+											{out.map((id, i) => (
+												<>
+													{i > 0 && ", "}
+													<a class="cactus-link" href={`/notes/${id}/`}>
+														{titleOf.get(id)}
+													</a>
+												</>
+											))}
+										</dd>
+									</>
+								)}
+								{incoming.length > 0 && (
+									<>
+										<dt class="opacity-70">Linked from</dt>
+										<dd>
+											{incoming.map((id, i) => (
+												<>
+													{i > 0 && ", "}
+													<a class="cactus-link" href={`/notes/${id}/`}>
+														{titleOf.get(id)}
+													</a>
+												</>
+											))}
+										</dd>
+									</>
+								)}
+							</dl>
+						)}
+					</li>
+				))
+			}
+		</ul>
+	</section>
+</WikiLayout>
