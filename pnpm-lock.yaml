@@ -3022,6 +3022,14 @@ snapshots:
 
   '@astrojs/compiler-rs@0.5.3':
     dependencies:
+      '@types/hast': 3.0.5
+      '@types/mdast': 4.0.4
+      js-yaml: 4.3.2
+      picomatch: 4.0.7
+      retext-smartypants: 6.2.0
+      shiki: 4.4.3
+      smol-toml: 1.9.1
+      unified: 11.0.5
       '@astrojs/compiler-binding': 0.5.3
 
   '@astrojs/internal-helpers@0.13.2':
@@ -3030,6 +3038,7 @@ snapshots:
       '@types/mdast': 4.0.4
       picomatch: 4.0.7
       retext-smartypants: 6.2.0
+      shiki: 4.4.3
       shiki: 4.6.0
       smol-toml: 1.9.1
       unified: 11.0.5
