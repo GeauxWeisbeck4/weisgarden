@@ -1,0 +1,53 @@
+---
+import type { MarkdownHeading } from "astro";
+import WikiSidebar from "@/components/note/WikiSidebar.astro";
+import { getAllNotes, groupNotesByCategory } from "@/data/note";
+import PageLayout from "@/layouts/Base.astro";
+import type { SiteMeta } from "@/types";
+
+interface Props {
+	meta: SiteMeta;
+	currentCategory?: string | undefined;
+	currentNoteId?: string | undefined;
+	breadcrumbs?: { text: string; url?: string }[];
+	/** headings for the "On this page" table of contents */
+	headings?: MarkdownHeading[] | undefined;
+}
+
+const { meta, currentCategory, currentNoteId, breadcrumbs = [], headings = [] } = Astro.props;
+const categories = groupNotesByCategory(await getAllNotes());
+---
+
+<PageLayout meta={meta} wide>
+	<div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_16rem]">
+		<div class="min-w-0">
+			{
+				breadcrumbs.length > 0 && (
+					<nav aria-label="Breadcrumb" class="mb-6 text-xs">
+						<ol class="flex flex-wrap items-center gap-1 opacity-80">
+							{breadcrumbs.map((crumb, i) => (
+								<li class="flex items-center gap-1">
+									{i > 0 && <span aria-hidden="true">/</span>}
+									{crumb.url ? (
+										<a class="cactus-link" href={crumb.url}>
+											{crumb.text}
+										</a>
+									) : (
+										<span aria-current="page">{crumb.text}</span>
+									)}
+								</li>
+							))}
+						</ol>
+					</nav>
+				)
+			}
+			<slot />
+		</div>
+		<WikiSidebar
+			categories={categories}
+			currentCategory={currentCategory}
+			currentNoteId={currentNoteId}
+			headings={headings}
+		/>
+	</div>
+</PageLayout>

@@ -137,6 +137,14 @@
 		@apply text-accent text-2xl font-semibold;
 	}
 
+	/* [[wiki-links]] between notes, see src/plugins/wiki-links.ts */
+	.prose a.wiki-link {
+		@apply text-accent-2 decoration-accent-2/50 decoration-dotted underline-offset-4 hover:decoration-solid;
+	}
+	.prose .wiki-link-missing {
+		@apply cursor-help not-italic line-through decoration-red-500/60 opacity-70;
+	}
+
 	
 }
 

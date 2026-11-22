@@ -1,0 +1,133 @@
+---
+interface Props {
+	variant?: "mini" | "full";
+	class?: string;
+	/** classes for the frame around the svg */
+	frameClass?: string;
+}
+
+const { variant = "mini", class: className, frameClass } = Astro.props;
+---
+
+<garden-graph class:list={["block", className]} variant={variant}>
+	<slot name="controls" />
+	<div class:list={["garden-frame relative touch-none overflow-hidden select-none", frameClass]}>
+		<svg aria-hidden="true" class="h-full w-full cursor-grab" data-svg></svg>
+		<slot name="overlay" />
+	</div>
+	<slot />
+</garden-graph>
+
+<style is:global>
+	garden-graph {
+		--graph-c0: #0c7fb8;
+		--graph-c1: #2f9e44;
+		--graph-c2: #c2410c;
+		--graph-c3: #9333ea;
+		--graph-c4: #be185d;
+		--graph-c5: #a16207;
+		--graph-c6: #0f766e;
+		--graph-c7: #4f46e5;
+		--graph-tag: color-mix(in oklab, var(--color-global-text) 55%, transparent);
+		--graph-edge: color-mix(in oklab, var(--color-global-text) 35%, transparent);
+	}
+	[data-theme="dark"] garden-graph {
+		--graph-c0: #5cc8ff;
+		--graph-c1: #8ce99a;
+		--graph-c2: #ffa94d;
+		--graph-c3: #d0a5ff;
+		--graph-c4: #faa2c1;
+		--graph-c5: #ffd43b;
+		--graph-c6: #63e6be;
+		--graph-c7: #a5b4fc;
+	}
+	.garden-svg .g-edge {
+		stroke: var(--graph-edge);
+		stroke-width: 1.5;
+		transition: opacity 150ms;
+	}
+	.garden-svg.is-mini .g-edge {
+		stroke-width: 1;
+	}
+	.garden-svg .g-edge.is-section {
+		stroke-dasharray: 3 4;
+		stroke-width: 1;
+		opacity: 0.55;
+	}
+	.garden-svg .g-edge.is-tag {
+		stroke-dasharray: 1 3;
+		stroke-width: 1;
+		opacity: 0.45;
+	}
+	.garden-svg .g-node {
+		cursor: pointer;
+		transition: opacity 150ms;
+	}
+	.garden-svg .g-mark {
+		stroke: var(--color-global-bg);
+		stroke-width: 1.5;
+	}
+	.garden-svg .g-node.is-section .g-mark {
+		stroke-width: 2.5;
+	}
+	.garden-svg.is-mini .g-node.is-section .g-mark {
+		stroke-width: 1.75;
+	}
+	.garden-svg .g-node text {
+		fill: var(--color-global-text);
+		font-size: 11px;
+		paint-order: stroke;
+		stroke: var(--color-global-bg);
+		stroke-width: 3px;
+		stroke-linejoin: round;
+		pointer-events: none;
+		transition: opacity 150ms;
+	}
+	.garden-svg .g-node.is-section text {
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		font-size: 10px;
+	}
+	.garden-svg .g-node.is-tag text {
+		font-size: 10px;
+		font-style: italic;
+	}
+	/* the mini graph only labels the current page, and whatever you hover */
+	.garden-svg.is-mini .g-node text {
+		font-size: 9.5px;
+		opacity: 0;
+	}
+	.garden-svg.is-mini .g-node.is-section text {
+		font-size: 8.5px;
+	}
+	.garden-svg.is-mini .g-node.is-focus text,
+	.garden-svg.is-mini.is-hovering .g-node.is-lit text {
+		opacity: 1;
+	}
+	.garden-svg.is-mini.is-hovering .g-node.is-focus:not(.is-lit) text {
+		opacity: 0;
+	}
+	.garden-svg .g-node.is-focus .g-mark {
+		stroke: var(--color-accent);
+		stroke-width: 3;
+	}
+	.garden-svg .g-node.is-focus text {
+		font-weight: 700;
+	}
+	.garden-svg.is-hovering .g-node:not(.is-lit),
+	.garden-svg.is-hovering .g-edge:not(.is-lit) {
+		opacity: 0.12;
+	}
+	.garden-svg .g-edge.is-lit {
+		stroke: var(--color-accent);
+		opacity: 1;
+	}
+	.garden-svg.is-panning {
+		cursor: grabbing;
+	}
+</style>
+
+<script>
+	import "@/scripts/garden-graph";
+</script>

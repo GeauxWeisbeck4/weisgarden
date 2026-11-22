@@ -1,0 +1,153 @@
+---
+import GardenGraph from "@/components/garden/GardenGraph.astro";
+import { getConnections, getGardenEntries, getGardenLinks } from "@/data/garden";
+import PageLayout from "@/layouts/Base.astro";
+
+const entries = await getGardenEntries();
+const links = getGardenLinks(entries);
+const notes = entries.filter((e) => e.kind === "note").length;
+const posts = entries.length - notes;
+
+const sections = [...new Map(entries.map((e) => [e.section.key, e.section])).values()]
+	.sort((a, b) => (a.kind === b.kind ? a.name.localeCompare(b.name) : a.kind === "note" ? -1 : 1))
+	.map((s, i) => ({ ...s, color: i % 8 }));
+
+const connections = entries
+	.map((entry) => ({ entry, ...getConnections(entry.key, entries, links) }))
+	.sort(
+		(a, b) =>
+			b.incoming.length + b.outgoing.length - (a.incoming.length + a.outgoing.length) ||
+			a.entry.title.localeCompare(b.entry.title),
+	);
+
+const meta = {
+	description: "A map of how the notes and posts in this digital garden connect to each other",
+	title: "Garden graph",
+};
+const toggles = [
+	{ opt: "notes", label: "Notes", checked: true },
+	{ opt: "posts", label: "Posts", checked: true },
+	{ opt: "sections", label: "Sections", checked: true },
+	{ opt: "tags", label: "Tags", checked: false },
+	{ opt: "local", label: "Neighbourhood only", checked: false },
+];
+---
+
+<PageLayout meta={meta} wide>
+	<h1 class="title mb-3">Garden graph</h1>
+	<p class="mb-6 max-w-3xl opacity-90">
+		Every one of the {notes} notes and {posts} posts in the garden, and the {links.length}{" "}
+		<code>[[wiki-links]]</code> between them. Solid lines are links, dashed lines join pages to their
+		section, dotted lines join pages that share a tag.
+	</p>
+
+	<GardenGraph frameClass="border-accent/30 bg-note-bg/30 h-[70vh] min-h-80 rounded-md border" variant="full">
+		<div class="mb-3 flex flex-wrap items-center justify-between gap-3 text-xs" slot="controls">
+			<fieldset class="flex flex-wrap items-center gap-x-4 gap-y-1">
+				<legend class="sr-only">Show</legend>
+				{
+					toggles.map((t) => (
+						<label class="flex cursor-pointer items-center gap-1.5" data-toggle={t.opt}>
+							<input checked={t.checked} data-opt={t.opt} type="checkbox" />
+							{t.label}
+						</label>
+					))
+				}
+			</fieldset>
+			<button
+				class="border-accent/40 hover:bg-accent/15 rounded border px-2 py-0.5"
+				data-reset
+				type="button"
+			>
+				Reset view
+			</button>
+		</div>
+		<p
+			class="pointer-events-none absolute bottom-2 left-3 text-[0.7rem] opacity-60"
+			slot="overlay"
+		>
+			Drag to move · scroll to zoom · click to open
+		</p>
+		<ul aria-label="Legend" class="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs">
+			<li class="flex items-center gap-1.5 opacity-80">● note</li>
+			<li class="flex items-center gap-1.5 opacity-80">■ post</li>
+			<li class="flex items-center gap-1.5 opacity-80">◆ tag</li>
+			{
+				sections.map((s) => (
+					<li class="flex items-center gap-1.5">
+						<span
+							aria-hidden="true"
+							class:list={[
+								"inline-block h-2.5 w-2.5",
+								s.kind === "note" ? "rounded-full" : "rounded-[2px]",
+							]}
+							style={`background: var(--graph-c${s.color})`}
+						/>
+						<a class="hover:underline" href={s.url}>
+							{s.name}
+							<span class="opacity-60">{s.kind === "note" ? "notes" : "posts"}</span>
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</GardenGraph>
+
+	<section aria-labelledby="connections-heading" class="mt-10 max-w-3xl">
+		<h2 class="text-accent-2 mb-4 text-lg font-semibold" id="connections-heading">Connections</h2>
+		<ul class="space-y-3">
+			{
+				connections.map(({ entry, outgoing, incoming }) => (
+					<li class="border-accent/20 border-b border-dashed pb-3 last:border-b-0" id={entry.key}>
+						<span class="bg-note-bg me-2 rounded px-1.5 text-[0.65rem] tracking-wide uppercase">
+							{entry.kind}
+						</span>
+						<a class="cactus-link text-accent-2 font-semibold" href={entry.url}>
+							{entry.title}
+						</a>
+						<span class="ms-2 text-xs opacity-60">{entry.section.name}</span>
+						{outgoing.length + incoming.length === 0 ? (
+							<p class="mt-1 text-xs opacity-60">No links yet</p>
+						) : (
+							<dl class="mt-1 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs">
+								{[
+									{ label: "Links to", items: outgoing },
+									{ label: "Linked from", items: incoming },
+								]
+									.filter((g) => g.items.length > 0)
+									.map((g) => (
+										<>
+											<dt class="opacity-70">{g.label}</dt>
+											<dd>
+												{g.items.map((e, i) => (
+													<>
+														{i > 0 && ", "}
+														<a class="cactus-link wiki-link" data-wiki-target={e.key} href={e.url}>
+															{e.title}
+														</a>
+													</>
+												))}
+											</dd>
+										</>
+									))}
+							</dl>
+						)}
+					</li>
+				))
+			}
+		</ul>
+	</section>
+</PageLayout>
+
+<script>
+	import type { GardenGraphBuiltDetail } from "@/scripts/garden-graph";
+
+	// "Neighbourhood only" needs something to be the centre of the neighbourhood
+	document.addEventListener("garden:built", (e) => {
+		const { focus } = (e as CustomEvent<GardenGraphBuiltDetail>).detail;
+		const label = document.querySelector<HTMLLabelElement>('[data-toggle="local"]');
+		if (!label) return;
+		label.hidden = !focus;
+		if (focus) label.title = `Only show what's near “${focus.label}”`;
+	});
+</script>

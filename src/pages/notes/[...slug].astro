@@ -1,8 +1,10 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
+import Connections from "@/components/garden/Connections.astro";
 import Note from "@/components/note/Note.astro";
-import PageLayout from "@/layouts/Base.astro";
+import { getNoteCategory, slugifyCategory } from "@/data/note";
+import WikiLayout from "@/layouts/Wiki.astro";
 
 // if you're using an adaptor in SSR mode, getStaticPaths wont work -> https://docs.astro.build/en/guides/routing/#modifying-the-slug-example-for-ssr
 export const getStaticPaths = (async () => {
@@ -16,6 +18,9 @@ export const getStaticPaths = (async () => {
 export type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
 const { note } = Astro.props;
+const { headings } = await render(note);
+const categoryName = getNoteCategory(note);
+const categorySlug = slugifyCategory(categoryName);
 
 const meta = {
 	description:
@@ -25,6 +30,29 @@ const meta = {
 };
 ---
 
-<PageLayout meta={meta}>
+<WikiLayout
+	breadcrumbs={[
+		{ text: "Notes", url: "/notes/" },
+		{ text: categoryName, url: `/notes/category/${categorySlug}/` },
+		{ text: note.data.title },
+	]}
+	currentCategory={categorySlug}
+	currentNoteId={note.id}
+	headings={headings}
+	meta={meta}
+>
 	<Note as="h1" note={note} />
-</PageLayout>
+	<Connections class="mt-12" gardenKey={`note:${note.id}`} title={note.data.title} />
+	{
+		note.data.tags.length > 0 && (
+			<footer class="border-accent/30 mt-8 border-t border-dashed pt-4">
+				<h2 class="mb-2 text-xs font-bold tracking-widest uppercase opacity-70">Tags</h2>
+				<ul class="flex flex-wrap gap-2">
+					{note.data.tags.map((tag) => (
+						<li class="bg-note-bg rounded px-2 py-0.5 text-xs">#{tag}</li>
+					))}
+				</ul>
+			</footer>
+		)
+	}
+</WikiLayout>

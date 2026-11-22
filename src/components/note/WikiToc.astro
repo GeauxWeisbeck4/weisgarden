@@ -1,0 +1,86 @@
+---
+import type { MarkdownHeading } from "astro";
+import { generateToc, type TocItem } from "@/utils/generateToc";
+
+interface Props {
+	headings: MarkdownHeading[];
+}
+
+const toc = generateToc(Astro.props.headings, { minHeadingLevel: 2, maxHeadingLevel: 3 });
+---
+
+{
+	toc.length > 0 && (
+		<wiki-toc class="border-accent/30 bg-note-bg/40 block rounded-md border p-4">
+			<h2 class="text-accent mb-3 text-xs font-bold tracking-widest uppercase">On this page</h2>
+			<nav aria-label="On this page">
+				<ol class="max-h-[40vh] space-y-1 overflow-y-auto text-xs">
+					{toc.map((h: TocItem) => (
+						<li>
+							<a class="wiki-toc-link" href={`#${h.slug}`}>
+								{h.text}
+							</a>
+							{h.children.length > 0 && (
+								<ol class="border-accent/30 ms-2 space-y-1 border-s ps-2">
+									{h.children.map((c) => (
+										<li>
+											<a class="wiki-toc-link opacity-80" href={`#${c.slug}`}>
+												{c.text}
+											</a>
+										</li>
+									))}
+								</ol>
+							)}
+						</li>
+					))}
+				</ol>
+			</nav>
+		</wiki-toc>
+	)
+}
+
+<style>
+	@reference "../../styles/global.css";
+
+	.wiki-toc-link {
+		@apply block rounded px-2 py-0.5 leading-snug hover:underline;
+	}
+	.wiki-toc-link.is-current {
+		@apply bg-accent/15 text-accent font-semibold opacity-100;
+	}
+</style>
+
+<script>
+	/** Highlights the heading currently in view */
+	class WikiToc extends HTMLElement {
+		#observer?: IntersectionObserver;
+
+		connectedCallback() {
+			const links = [...this.querySelectorAll<HTMLAnchorElement>("a.wiki-toc-link")];
+			const byId = new Map(links.map((a) => [decodeURIComponent(a.hash.slice(1)), a]));
+			const headings = [...byId.keys()]
+				.map((id) => document.getElementById(id))
+				.filter((el): el is HTMLElement => !!el);
+			if (!headings.length) return;
+
+			const setCurrent = (id: string) => {
+				for (const a of links) a.classList.toggle("is-current", a === byId.get(id));
+			};
+
+			this.#observer = new IntersectionObserver(
+				(entries) => {
+					const visible = entries.filter((e) => e.isIntersecting);
+					if (visible[0]) setCurrent(visible[0].target.id);
+				},
+				{ rootMargin: "0px 0px -70% 0px" },
+			);
+			for (const h of headings) this.#observer.observe(h);
+		}
+
+		disconnectedCallback() {
+			this.#observer?.disconnect();
+		}
+	}
+
+	customElements.define("wiki-toc", WikiToc);
+</script>

@@ -1,19 +1,31 @@
 ---
 import { OpenPanelComponent } from "@openpanel/astro";
 import BaseHead from "@/components/BaseHead.astro";
+import GardenPanel from "@/components/garden/GardenPanel.astro";
 import Footer from "@/components/layout/Footer.astro";
 import Header from "@/components/layout/Header.astro";
+import WikiLinkPreview from "@/components/note/WikiLinkPreview.astro";
 import SkipLink from "@/components/SkipLink.astro";
 import ThemeProvider from "@/components/ThemeProvider.astro";
 import { siteConfig } from "@/site.config";
 import type { SiteMeta } from "@/types";
+import { BUILD_ID } from "@/utils/build";
 
 interface Props {
 	meta: SiteMeta;
+	/** Use a wider page container, e.g. for the notes wiki with its sidebar */
+	wide?: boolean;
+	/**
+	 * Where the garden graph panel goes. Defaults to the right-hand margin, or "none" for wide
+	 * layouts, which should render their own <GardenPanel placement="sidebar" />.
+	 */
+	graph?: "margin" | "none";
 }
 
 const {
 	meta: { articleDate, description = siteConfig.description, ogImage, title },
+	wide = false,
+	graph = wide ? "none" : "margin",
 } = Astro.props;
 ---
 
@@ -22,14 +34,22 @@ const {
 		<OpenPanelComponent clientId={import.meta.env.OPENPANEL_CLIENT_ID} />
 		<BaseHead articleDate={articleDate} description={description} ogImage={ogImage} title={title} />
 		<ThemeProvider />
+		<meta content={`/garden.json?v=${BUILD_ID}`} name="garden-data" />
 	</head>
-	<body class="bg-global-bg text-global-text mx-auto flex min-h-screen max-w-3xl flex-col px-4 pt-16 font-mono text-sm font-normal antialiased sm:px-8">
+	<body
+		class:list={[
+			"bg-global-bg text-global-text mx-auto flex min-h-screen w-full flex-col px-4 pt-16 font-mono text-sm font-normal antialiased sm:px-8",
+			wide ? "max-w-6xl" : "max-w-3xl",
+		]}
+	>
 		<SkipLink />
 		<Header />
 		<main id="main">
 			<slot />
 		</main>
 		<Footer />
+		{graph === "margin" && <GardenPanel placement="margin" />}
+		<WikiLinkPreview />
 		<script is:inline type="speculationrules">
 			{
 				"prefetch": [

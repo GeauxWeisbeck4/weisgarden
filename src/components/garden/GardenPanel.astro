@@ -1,0 +1,202 @@
+---
+/**
+ * The always-available mini graph.
+ *
+ * - `margin`: fixed in the right-hand margin on wide screens (xl+), and behind a small floating
+ *   button on narrower screens so it never covers the content
+ * - `sidebar`: a normal block, for layouts that already have a sidebar (the notes wiki)
+ */
+import { Icon } from "astro-icon/components";
+import GardenGraph from "./GardenGraph.astro";
+
+interface Props {
+	placement?: "margin" | "sidebar";
+}
+
+const { placement = "margin" } = Astro.props;
+const isMargin = placement === "margin";
+---
+
+<garden-panel class="garden-panel-root" data-placement={placement}>
+	{
+		isMargin && (
+			<button
+				aria-controls="garden-panel"
+				aria-expanded="false"
+				class="garden-fab"
+				data-toggle
+				title="Garden graph"
+				type="button"
+			>
+				<Icon aria-hidden="true" class="h-5 w-5" focusable="false" name="mdi:graph-outline" />
+				<span class="sr-only">Show garden graph</span>
+			</button>
+		)
+	}
+	<aside aria-label="Garden graph" class="garden-panel" id={isMargin ? "garden-panel" : undefined}>
+		<div class="mb-2 flex items-center justify-between gap-2">
+			<h2 class="text-accent flex items-center gap-1.5 text-xs font-bold tracking-widest uppercase">
+				<Icon aria-hidden="true" class="h-4 w-4" focusable="false" name="mdi:graph-outline" />
+				Garden
+			</h2>
+			<div class="flex items-center gap-1 text-[0.7rem]">
+				<button
+					aria-pressed="true"
+					class="garden-chip"
+					data-scope
+					hidden
+					title="Switch between this page's neighbourhood and the whole garden"
+					type="button"
+				>
+					Local
+				</button>
+				<a class="garden-chip" data-expand href="/graph/" title="Open the full graph">
+					<Icon aria-hidden="true" class="h-3.5 w-3.5" focusable="false" name="mdi:arrow-expand" />
+					<span class="sr-only">Open the full garden graph</span>
+				</a>
+				{
+					isMargin && (
+						<button class="garden-chip garden-close" data-close title="Close" type="button">
+							<Icon aria-hidden="true" class="h-3.5 w-3.5" focusable="false" name="mdi:close" />
+							<span class="sr-only">Close garden graph</span>
+						</button>
+					)
+				}
+			</div>
+		</div>
+		<GardenGraph frameClass="garden-mini-frame" variant="mini" />
+		<p aria-live="polite" class="mt-2 text-[0.7rem] leading-snug opacity-75" data-summary>
+			Loading the garden…
+		</p>
+		<p class="mt-1 flex gap-3 text-[0.65rem] opacity-60">
+			<span><span aria-hidden="true">●</span> note</span>
+			<span><span aria-hidden="true">■</span> post</span>
+			<span><span aria-hidden="true">○</span> section</span>
+			<span><span aria-hidden="true">◆</span> tag</span>
+		</p>
+	</aside>
+</garden-panel>
+
+<style is:global>
+	@reference "../../styles/global.css";
+
+	.garden-panel {
+		@apply border-accent/30 rounded-md border p-3;
+		background: color-mix(in oklab, var(--color-global-bg) 88%, var(--color-accent));
+	}
+	.garden-mini-frame {
+		@apply border-accent/20 bg-global-bg/60 h-52 rounded border;
+	}
+	.garden-chip {
+		@apply border-accent/30 hover:bg-accent/15 inline-flex h-6 min-w-6 cursor-pointer items-center justify-center rounded border px-1.5 transition-colors;
+	}
+	.garden-chip[aria-pressed="false"] {
+		@apply opacity-70;
+	}
+
+	/* --- margin placement --- */
+	.garden-fab {
+		@apply bg-global-bg border-accent/40 text-accent hover:bg-accent/15 fixed start-4 bottom-8 z-40 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-2 shadow-md transition-colors sm:start-8 sm:h-12 sm:w-12;
+	}
+	.garden-fab[aria-expanded="true"] {
+		@apply bg-accent/15;
+	}
+	[data-placement="margin"] .garden-panel {
+		@apply fixed z-40 hidden;
+	}
+	[data-placement="margin"] .garden-panel[data-open] {
+		@apply block shadow-xl;
+		inset-inline-start: 1rem;
+		bottom: 5.5rem;
+		width: min(22rem, calc(100vw - 2rem));
+	}
+	[data-placement="margin"] .garden-panel[data-open] .garden-mini-frame {
+		height: min(18rem, calc(100vh - 14rem));
+	}
+	@media (min-width: 640px) {
+		[data-placement="margin"] .garden-panel[data-open] {
+			inset-inline-start: 2rem;
+			bottom: 6.5rem;
+		}
+	}
+	/* wide enough for the panel to live in the margin beside the 48rem content column */
+	@media (min-width: 80rem) {
+		.garden-fab,
+		.garden-close {
+			@apply hidden;
+		}
+		[data-placement="margin"] .garden-panel,
+		[data-placement="margin"] .garden-panel[data-open] {
+			@apply block shadow-none;
+			top: 7.5rem;
+			bottom: auto;
+			inset-inline-start: calc(50% + 24rem + 0.75rem);
+			width: min(18rem, calc(50vw - 26rem));
+		}
+		[data-placement="margin"] .garden-panel .garden-mini-frame,
+		[data-placement="margin"] .garden-panel[data-open] .garden-mini-frame {
+			height: min(15rem, calc(100vh - 16rem));
+		}
+	}
+	@media print {
+		.garden-panel-root {
+			display: none;
+		}
+	}
+</style>
+
+<script>
+	import type { GardenGraph, GardenGraphBuiltDetail } from "@/scripts/garden-graph";
+
+	class GardenPanel extends HTMLElement {
+		connectedCallback() {
+			const panel = this.querySelector<HTMLElement>(".garden-panel")!;
+			const graph = this.querySelector<GardenGraph>("garden-graph")!;
+			const scope = this.querySelector<HTMLButtonElement>("[data-scope]")!;
+			const expand = this.querySelector<HTMLAnchorElement>("[data-expand]")!;
+			const summary = this.querySelector<HTMLElement>("[data-summary]")!;
+			const toggle = this.querySelector<HTMLButtonElement>("[data-toggle]");
+
+			this.addEventListener("garden:built", (e) => {
+				const { focus, nodes, links, options } = (e as CustomEvent<GardenGraphBuiltDetail>).detail;
+				scope.hidden = !focus;
+				scope.setAttribute("aria-pressed", String(options.local));
+				scope.textContent = options.local ? "Local" : "All";
+				expand.href = focus ? `/graph/?focus=${encodeURIComponent(focus.key)}` : "/graph/";
+				const things = `${nodes} ${nodes === 1 ? "page" : "pages"}`;
+				const linkText = `${links} wiki-link${links === 1 ? "" : "s"}`;
+				summary.textContent =
+					focus && options.local
+						? `${things} near “${focus.label}”, ${linkText}.`
+						: `The whole garden: ${things}, ${linkText}.`;
+			});
+
+			scope.addEventListener("click", () => {
+				const local = !graph.options.local;
+				graph.setOptions({ local, tags: local });
+			});
+
+			if (!toggle) return;
+			const setOpen = (open: boolean) => {
+				panel.toggleAttribute("data-open", open);
+				toggle.setAttribute("aria-expanded", String(open));
+			};
+			toggle.addEventListener("click", () => setOpen(!panel.hasAttribute("data-open")));
+			this.querySelector("[data-close]")?.addEventListener("click", () => {
+				setOpen(false);
+				toggle.focus();
+			});
+			document.addEventListener("keydown", (e) => {
+				if (e.key === "Escape" && panel.hasAttribute("data-open")) {
+					setOpen(false);
+					toggle.focus();
+				}
+			});
+			document.addEventListener("pointerdown", (e) => {
+				if (panel.hasAttribute("data-open") && !this.contains(e.target as Node)) setOpen(false);
+			});
+		}
+	}
+
+	if (!customElements.get("garden-panel")) customElements.define("garden-panel", GardenPanel);
+</script>

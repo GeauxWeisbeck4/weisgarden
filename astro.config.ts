@@ -17,11 +17,16 @@ import {
 	satteriReadingTimePlugin,
 	satteriUnwrapImagesPlugin,
 } from "./src/plugins/satteri";
+import { satteriWikiLinksPlugin } from "./src/plugins/wiki-links";
 import { expressiveCodeOptions, siteConfig } from "./src/site.config";
 
 // https://astro.build/config
 export default defineConfig({
 	site: siteConfig.url,
+	redirects: {
+		// the notes-only graph became the whole-garden graph
+		"/notes/graph": "/graph",
+	},
 	image: {
 		domains: ["webmention.io"],
 	},
@@ -73,6 +78,7 @@ export default defineConfig({
 				satteriReadingTimePlugin(),
 				satteriGithubCardPlugin(),
 				satteriAdmonitionsPlugin(),
+				satteriWikiLinksPlugin(),
 			],
 			hastPlugins: [
 				satteriHeadingIdsPlugin(),
