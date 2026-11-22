@@ -1,5 +1,5 @@
 import type { AstroExpressiveCodeOptions } from "astro-expressive-code";
-import type { SiteConfig } from "@/types";
+import type { OpenPanelData, SiteConfig } from "@/types";
 
 export const siteConfig: SiteConfig = {
 	// ! Please remember to replace the following site property with your own domain, used in astro.config.ts
@@ -54,6 +54,13 @@ export const menuLinks: { path: string; title: string }[] = [
 		title: "Support",
 	},
 ];
+
+export const openPanelConfig: OpenPanelData = {
+	clientId: import.meta.env.OPENPANEL_CLIENT_ID,
+	trackScreenViews: true,
+	trackOutgoingLinks: true,
+	trackAttributes: true,
+};
 
 // https://expressive-code.com/reference/configuration/
 export const expressiveCodeOptions: AstroExpressiveCodeOptions = {
