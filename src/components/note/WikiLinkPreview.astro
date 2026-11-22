@@ -1,5 +1,5 @@
 ---
-// Hover / focus previews for `[[wiki-links]]`. Data comes from /notes/previews.json.
+// Hover / focus previews for `[[wiki-links]]` to notes and posts. Data comes from /garden.json.
 ---
 
 <style is:global>
@@ -40,6 +40,8 @@
 </style>
 
 <script>
+	import { loadGarden } from "@/scripts/garden-data";
+
 	interface Preview {
 		title: string;
 		description: string;
@@ -55,9 +57,22 @@
 
 	let data: Promise<Record<string, Preview>> | undefined;
 	const loadPreviews = () => {
-		data ??= fetch("/notes/previews.json")
-			.then((r) => (r.ok ? r.json() : {}))
-			.catch(() => ({}));
+		data ??= loadGarden().then(({ nodes, sections }) => {
+			const sectionName = new Map(sections.map((s) => [s.key, s.name]));
+			return Object.fromEntries(
+				nodes.map((n) => [
+					n.key,
+					{
+						title: n.title,
+						description: n.description,
+						excerpt: n.excerpt,
+						category: `${n.kind === "note" ? "Note" : "Post"} · ${sectionName.get(n.section) ?? ""}`,
+						date: n.date,
+						status: n.status,
+					},
+				]),
+			);
+		});
 		return data;
 	};
 

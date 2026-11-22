@@ -1,6 +1,5 @@
 ---
 import type { MarkdownHeading } from "astro";
-import WikiLinkPreview from "@/components/note/WikiLinkPreview.astro";
 import WikiSidebar from "@/components/note/WikiSidebar.astro";
 import { getAllNotes, groupNotesByCategory } from "@/data/note";
 import PageLayout from "@/layouts/Base.astro";
@@ -51,6 +50,4 @@ const categories = groupNotesByCategory(await getAllNotes());
 			headings={headings}
 		/>
 	</div>
-	<WikiLinkPreview />
-
 </PageLayout>

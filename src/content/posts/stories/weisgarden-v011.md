@@ -8,6 +8,8 @@ tags: ["story", "weisgarden", "in-progress"]
 
 ## WeisGarden v0.1.1
 
+Part of the [[posts/WeisGarden]] project. How the garden fits together is written up in [[Digital Garden]].
+
 Developer should ensure that the user is able to navigate the site without raising and errors. Should pick colors and new font so it doesn't look so much like theme, but more importantly so it feels like WeisGarden is actually personalized to Andrew.
 
 - **Notes**:

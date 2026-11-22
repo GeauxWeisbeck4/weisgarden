@@ -4,18 +4,27 @@ import type { PhrasingContent } from "mdast";
 import type { MdastPluginDefinition } from "satteri";
 import {
 	createWikiResolver,
+	type GardenKind,
+	gardenKey,
+	gardenUrl,
 	githubSlug,
 	parseWikiLinks,
 	WIKI_LINK_RE,
-	type WikiNoteRef,
+	type WikiRef,
 } from "../utils/wikiLinks";
 
-const NOTES_DIR = path.resolve("src/content/notes");
+const CONTENT_DIRS: Record<GardenKind, string> = {
+	note: path.resolve("src/content/notes"),
+	post: path.resolve("src/content/posts"),
+};
 
-/** Read note ids + titles straight from disk (content collections aren't available inside markdown plugins) */
-function readNoteIndex(dir = NOTES_DIR): WikiNoteRef[] {
+const isProd = process.env.NODE_ENV === "production";
+
+/** Read entry ids + titles straight from disk (content collections aren't available inside markdown plugins) */
+function readIndex(kind: GardenKind): WikiRef[] {
+	const dir = CONTENT_DIRS[kind];
 	if (!fs.existsSync(dir)) return [];
-	const refs: WikiNoteRef[] = [];
+	const refs: WikiRef[] = [];
 	for (const entry of fs.readdirSync(dir, { recursive: true, withFileTypes: true })) {
 		if (!entry.isFile() || !/\.mdx?$/.test(entry.name)) continue;
 		const file = path.join(entry.parentPath, entry.name);
@@ -25,6 +34,8 @@ function readNoteIndex(dir = NOTES_DIR): WikiNoteRef[] {
 			.replace(/\.mdx?$/, "");
 		const source = fs.readFileSync(file, "utf8");
 		const frontmatter = source.match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1] ?? "";
+		// drafts aren't built in production, so don't link to them
+		if (isProd && kind === "post" && /^draft:\s*true\s*$/m.test(frontmatter)) continue;
 		const slugOverride = frontmatter.match(/^slug:\s*["']?(.+?)["']?\s*$/m)?.[1];
 		const title = frontmatter.match(/^title:\s*["']?(.+?)["']?\s*$/m)?.[1] ?? rel;
 		const id =
@@ -34,14 +45,14 @@ function readNoteIndex(dir = NOTES_DIR): WikiNoteRef[] {
 				.map(githubSlug)
 				.join("/")
 				.replace(/\/index$/, "");
-		refs.push({ id, title });
+		refs.push({ kind, id, title });
 	}
 	return refs;
 }
 
 export function satteriWikiLinksPlugin(): () => MdastPluginDefinition {
 	return () => {
-		const resolve = createWikiResolver(readNoteIndex());
+		const resolve = createWikiResolver([...readIndex("note"), ...readIndex("post")]);
 
 		return {
 			name: "weisgarden-wiki-links",
@@ -60,8 +71,8 @@ export function satteriWikiLinksPlugin(): () => MdastPluginDefinition {
 					}
 					cursor = match.index + match[0].length;
 
-					const note = resolve(link.target);
-					if (!note) {
+					const ref = resolve(link.target);
+					if (!ref) {
 						console.warn(`[wiki-links] Could not resolve [[${link.target}]]`);
 						parts.push({
 							type: "emphasis",
@@ -70,7 +81,7 @@ export function satteriWikiLinksPlugin(): () => MdastPluginDefinition {
 								hName: "span",
 								hProperties: {
 									className: ["wiki-link", "wiki-link-missing"],
-									title: `No note found for "${link.target}"`,
+									title: `Nothing in the garden matches "${link.target}"`,
 								},
 							},
 						});
@@ -78,13 +89,17 @@ export function satteriWikiLinksPlugin(): () => MdastPluginDefinition {
 					}
 
 					const hash = link.heading ? `#${githubSlug(link.heading)}` : "";
-					const text =
-						link.label ?? (link.heading ? `${note.title} › ${link.heading}` : note.title);
+					const text = link.label ?? (link.heading ? `${ref.title} › ${link.heading}` : ref.title);
 					parts.push({
 						type: "link",
-						url: `/notes/${note.id}/${hash}`,
+						url: `${gardenUrl(ref)}${hash}`,
 						children: [{ type: "text", value: text }],
-						data: { hProperties: { className: ["wiki-link"], "data-wiki-target": note.id } },
+						data: {
+							hProperties: {
+								className: ["wiki-link", `wiki-link-${ref.kind}`],
+								"data-wiki-target": gardenKey(ref),
+							},
+						},
 					});
 				}
 				if (cursor < node.value.length) {

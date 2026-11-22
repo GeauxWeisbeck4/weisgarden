@@ -1,19 +1,30 @@
 /**
- * Shared helpers for `[[wiki-links]]` between notes.
+ * Shared helpers for `[[wiki-links]]` between notes and posts.
  *
  * Supported syntax:
- *   [[target]]             link text = the target note's title
+ *   [[target]]             link text = the target's title
  *   [[target|label]]       custom link text
- *   [[target#heading]]     link to a heading inside the note
+ *   [[target#heading]]     link to a heading inside the note/post
+ *   [[posts/target]]       only look in posts
+ *   [[notes/target]]       only look in notes
  *
- * `target` may be a note id (`seedlings/my-note`), a file name (`my-note`) or a note title
- * (`My Note`), all matched case-insensitively.
+ * (`post:target` / `note:target` also resolve, but in markdown files `:target` is parsed as a
+ * text directive before this plugin sees it, so prefer the slash form.)
+ *
+ * `target` may be an entry id (`seedlings/my-note`), a file name (`my-note`) or a title
+ * (`My Note`), all matched case-insensitively. Without a prefix, notes win over posts when both match.
  */
 
-export interface WikiNoteRef {
+export type GardenKind = "note" | "post";
+
+export interface WikiRef {
+	kind: GardenKind;
 	id: string;
 	title: string;
 }
+
+/** @deprecated kept for older imports, use WikiRef */
+export type WikiNoteRef = WikiRef;
 
 export interface ParsedWikiLink {
 	raw: string;
@@ -23,6 +34,12 @@ export interface ParsedWikiLink {
 }
 
 export const WIKI_LINK_RE = /\[\[([^[\]|#\n]+)(?:#([^[\]|\n]+))?(?:\|([^[\]\n]+))?\]\]/g;
+
+/** Unique key for an entry across collections, e.g. `note:welcome` or `post:journal/foo` */
+export const gardenKey = (ref: Pick<WikiRef, "kind" | "id">) => `${ref.kind}:${ref.id}`;
+
+export const gardenUrl = (ref: Pick<WikiRef, "kind" | "id">) =>
+	`/${ref.kind === "note" ? "notes" : "posts"}/${ref.id}/`;
 
 /** Mirrors github-slugger, which Astro's glob loader uses to build entry ids. */
 export function githubSlug(value: string) {
@@ -47,21 +64,35 @@ const normalise = (s: string) =>
 		.toLowerCase()
 		.replace(/\.mdx?$/, "");
 
-/** Build a resolver that maps a wiki-link target to a note */
-export function createWikiResolver(notes: WikiNoteRef[]) {
-	const byKey = new Map<string, WikiNoteRef>();
-	const add = (key: string, note: WikiNoteRef) => {
+const PREFIX_RE = /^(note|post)s?[:/]\s*/i;
+
+/** Build a resolver that maps a wiki-link target to a note or post */
+export function createWikiResolver(refs: WikiRef[]) {
+	// notes first so an un-prefixed target prefers a note
+	const ordered = [...refs].sort((a, b) => (a.kind === b.kind ? 0 : a.kind === "note" ? -1 : 1));
+	const maps = { any: new Map<string, WikiRef>(), note: new Map(), post: new Map() } as Record<
+		"any" | GardenKind,
+		Map<string, WikiRef>
+	>;
+	const add = (key: string, ref: WikiRef) => {
 		const k = normalise(key);
-		if (k && !byKey.has(k)) byKey.set(k, note);
+		if (!k) return;
+		for (const map of [maps.any, maps[ref.kind]]) if (!map.has(k)) map.set(k, ref);
 	};
 	// precedence: exact id > title > file name
-	for (const note of notes) add(note.id, note);
-	for (const note of notes) add(note.title, note);
-	for (const note of notes) add(note.id.split("/").at(-1) ?? "", note);
+	for (const ref of ordered) add(ref.id, ref);
+	for (const ref of ordered) add(ref.title, ref);
+	for (const ref of ordered) add(ref.id.split("/").at(-1) ?? "", ref);
 
-	return (target: string): WikiNoteRef | undefined => {
-		const t = normalise(target);
-		return byKey.get(t) ?? byKey.get(githubSlug(t)) ?? byKey.get(t.split("/").at(-1) ?? "");
+	return (target: string): WikiRef | undefined => {
+		let t = normalise(target);
+		let map = maps.any;
+		const prefix = t.match(PREFIX_RE);
+		if (prefix) {
+			map = maps[prefix[1]?.toLowerCase() as GardenKind];
+			t = t.slice(prefix[0].length);
+		}
+		return map.get(t) ?? map.get(githubSlug(t)) ?? map.get(t.split("/").at(-1) ?? "");
 	};
 }
 

@@ -1,9 +1,9 @@
 ---
 import { getCollection, render } from "astro:content";
 import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
-import FormattedDate from "@/components/FormattedDate.astro";
+import Connections from "@/components/garden/Connections.astro";
 import Note from "@/components/note/Note.astro";
-import { getBacklinks, getNoteCategory, slugifyCategory } from "@/data/note";
+import { getNoteCategory, slugifyCategory } from "@/data/note";
 import WikiLayout from "@/layouts/Wiki.astro";
 
 // if you're using an adaptor in SSR mode, getStaticPaths wont work -> https://docs.astro.build/en/guides/routing/#modifying-the-slug-example-for-ssr
@@ -11,13 +11,13 @@ export const getStaticPaths = (async () => {
 	const allNotes = await getCollection("note");
 	return allNotes.map((note) => ({
 		params: { slug: note.id },
-		props: { note, backlinks: getBacklinks(note.id, allNotes) },
+		props: { note },
 	}));
 }) satisfies GetStaticPaths;
 
 export type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
-const { note, backlinks } = Astro.props;
+const { note } = Astro.props;
 const { headings } = await render(note);
 const categoryName = getNoteCategory(note);
 const categorySlug = slugifyCategory(categoryName);
@@ -42,33 +42,7 @@ const meta = {
 	meta={meta}
 >
 	<Note as="h1" note={note} />
-	<section aria-labelledby="backlinks-heading" class="bg-note-bg/40 mt-12 rounded-md p-4">
-		<h2
-			class="mb-3 text-xs font-bold tracking-widest uppercase opacity-70"
-			id="backlinks-heading"
-		>
-			Linked from {backlinks.length > 0 && `(${backlinks.length})`}
-		</h2>
-		{
-			backlinks.length > 0 ? (
-				<ul class="space-y-2">
-					{backlinks.map((b) => (
-						<li class="flex flex-wrap items-baseline justify-between gap-x-4">
-							<a class="cactus-link text-accent-2 font-semibold" href={`/notes/${b.id}/`}>
-								{b.data.title}
-							</a>
-							<FormattedDate class="text-xs opacity-70" date={b.data.publishDate} />
-						</li>
-					))}
-				</ul>
-			) : (
-				<p class="text-xs opacity-70">
-					No other notes link here yet. Link to this note with
-					<code>[[{note.data.title}]]</code>.
-				</p>
-			)
-		}
-	</section>
+	<Connections class="mt-12" gardenKey={`note:${note.id}`} title={note.data.title} />
 	{
 		note.data.tags.length > 0 && (
 			<footer class="border-accent/30 mt-8 border-t border-dashed pt-4">
