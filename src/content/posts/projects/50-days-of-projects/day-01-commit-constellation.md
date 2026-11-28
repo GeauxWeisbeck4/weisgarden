@@ -9,7 +9,7 @@ pinned: true
 
 ## Day One Project - Commit Constellation
 
-For the very first project of my [[50-days-of-projects]] series that I am doing, I will be planning, designing, developing, testing, and then deploying a Commit Constellation application. A Commit constellation is a tool that maps Github repos, users, and shared dependencies as an interactive force graph.
+For the very first project of my [50-days-of-projects](index.md) series that I am doing, I will be planning, designing, developing, testing, and then deploying a Commit Constellation application. A Commit constellation is a tool that maps Github repos, users, and shared dependencies as an interactive force graph.
 
 Sounds like a pretty useful and interesting idea that Claude AI helped me generate and setup. I am going to go ahead and just jump right into this with an over view of the project, steps I took, important Architecture Design Record decisions that were logged, and my full project retrospective.
 
