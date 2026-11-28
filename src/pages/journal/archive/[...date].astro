@@ -1,0 +1,64 @@
+---
+import type { GetStaticPaths } from "astro";
+import Timeline from "@/components/journal/Timeline.astro";
+import { getJournalArchive, getJournalData, type JournalEntry } from "@/data/journal";
+import JournalLayout from "@/layouts/Journal.astro";
+
+export const getStaticPaths = (async () => {
+	const { entries } = await getJournalData();
+	return getJournalArchive(entries).flatMap(({ year, months }) => {
+		const inYear = entries.filter((e) => e.data.date.getFullYear() === year);
+		return [
+			{
+				params: { date: `${year}` },
+				props: { entries: inYear, year, month: undefined, monthLabel: undefined },
+			},
+			...months.map((m) => ({
+				params: { date: `${year}/${m.slug}` },
+				props: {
+					entries: inYear.filter((e) => e.data.date.getMonth() + 1 === m.month),
+					year,
+					month: m.month,
+					monthLabel: m.label,
+				},
+			})),
+		];
+	});
+}) satisfies GetStaticPaths;
+
+interface Props {
+	entries: JournalEntry[];
+	year: number;
+	month: number | undefined;
+	monthLabel: string | undefined;
+}
+
+const { entries, year, month, monthLabel } = Astro.props;
+const { notes, posts } = await getJournalData();
+
+const heading = monthLabel ? `${monthLabel} ${year}` : `${year}`;
+const meta = {
+	description: `Journal entries from ${heading}`,
+	title: `Journal: ${heading}`,
+};
+---
+
+<JournalLayout currentDate={{ year, month }} meta={meta}>
+	<h1 class="title mb-3">Journal: {heading}</h1>
+	<p class="text-muted mb-10">
+		{entries.length}
+		{entries.length === 1 ? "entry" : "entries"} ·
+		<a class="cactus-link" href="/journal/">
+			Whole journal
+		</a>
+		{month && (
+			<>
+				{" · "}
+				<a class="cactus-link" href={`/journal/archive/${year}/`}>
+					All of {year}
+				</a>
+			</>
+		)}
+	</p>
+	<Timeline entries={entries} notes={notes} posts={posts} />
+</JournalLayout>

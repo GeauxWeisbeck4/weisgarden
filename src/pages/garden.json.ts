@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
-import { getExcerpt, getGardenEntries, getGardenLinks } from "@/data/garden";
+import { getExcerpt, getGardenEntries, getGardenLinks, KIND_RANK } from "@/data/garden";
+import { sprintKey, sprintUrl } from "@/data/journal";
 import { getFormattedDate } from "@/utils/date";
 
 /**
@@ -11,7 +12,7 @@ export const GET: APIRoute = async () => {
 	const links = getGardenLinks(entries);
 
 	const sections = [...new Map(entries.map((e) => [e.section.key, e.section])).values()]
-		.sort((a, b) => (a.kind === b.kind ? a.name.localeCompare(b.name) : a.kind === "note" ? -1 : 1))
+		.sort((a, b) => KIND_RANK[a.kind] - KIND_RANK[b.kind] || a.name.localeCompare(b.name))
 		.map((s, i) => ({ ...s, color: i % 8 }));
 
 	const postTags = new Set(entries.filter((e) => e.kind === "post").flatMap((e) => e.tags));
@@ -22,9 +23,18 @@ export const GET: APIRoute = async () => {
 		url: postTags.has(tag) ? `/tags/${encodeURIComponent(tag)}/` : undefined,
 	}));
 
+	const sprints = [...new Set(entries.flatMap((e) => (e.sprint === undefined ? [] : [e.sprint])))]
+		.sort((a, b) => a - b)
+		.map((sprint) => ({
+			key: sprintKey(sprint),
+			name: `Sprint ${sprint}`,
+			url: sprintUrl(sprint),
+		}));
+
 	const data = {
 		sections,
 		tags,
+		sprints,
 		nodes: entries.map((e) => ({
 			key: e.key,
 			kind: e.kind,
@@ -32,6 +42,7 @@ export const GET: APIRoute = async () => {
 			url: e.url,
 			section: e.section.key,
 			tags: e.tags.map((t) => `tag:${t}`),
+			...(e.sprint !== undefined && { sprint: sprintKey(e.sprint) }),
 			date: getFormattedDate(e.date),
 			description: e.description,
 			excerpt: getExcerpt(e.body),

@@ -16,6 +16,7 @@ import {
 const CONTENT_DIRS: Record<GardenKind, string> = {
 	note: path.resolve("src/content/notes"),
 	post: path.resolve("src/content/posts"),
+	journal: path.resolve("src/content/journal"),
 };
 
 const isProd = process.env.NODE_ENV === "production";
@@ -35,7 +36,7 @@ function readIndex(kind: GardenKind): WikiRef[] {
 		const source = fs.readFileSync(file, "utf8");
 		const frontmatter = source.match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1] ?? "";
 		// drafts aren't built in production, so don't link to them
-		if (isProd && kind === "post" && /^draft:\s*true\s*$/m.test(frontmatter)) continue;
+		if (isProd && kind !== "note" && /^draft:\s*true\s*$/m.test(frontmatter)) continue;
 		const slugOverride = frontmatter.match(/^slug:\s*["']?(.+?)["']?\s*$/m)?.[1];
 		const title = frontmatter.match(/^title:\s*["']?(.+?)["']?\s*$/m)?.[1] ?? rel;
 		const id =
@@ -52,7 +53,11 @@ function readIndex(kind: GardenKind): WikiRef[] {
 
 export function satteriWikiLinksPlugin(): () => MdastPluginDefinition {
 	return () => {
-		const resolve = createWikiResolver([...readIndex("note"), ...readIndex("post")]);
+		const resolve = createWikiResolver([
+			...readIndex("note"),
+			...readIndex("post"),
+			...readIndex("journal"),
+		]);
 
 		return {
 			name: "weisgarden-wiki-links",

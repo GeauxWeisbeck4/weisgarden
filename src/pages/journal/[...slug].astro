@@ -1,0 +1,190 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { render } from "astro:content";
+import type { GetStaticPaths } from "astro";
+import FormattedDate from "@/components/FormattedDate.astro";
+import Connections from "@/components/garden/Connections.astro";
+import {
+	getJournalData,
+	getJournalLinks,
+	type JournalEntry,
+	journalUrl,
+	sprintKey,
+	sprintUrl,
+} from "@/data/journal";
+import JournalLayout from "@/layouts/Journal.astro";
+import { gardenKey, gardenUrl } from "@/utils/wikiLinks";
+
+export const getStaticPaths = (async () => {
+	const { entries } = await getJournalData();
+	// entries are newest first
+	return entries.map((entry, i) => ({
+		params: { slug: entry.id },
+		props: { entry, newer: entries[i - 1], older: entries[i + 1] },
+	}));
+}) satisfies GetStaticPaths;
+
+interface Props {
+	entry: JournalEntry;
+	newer: JournalEntry | undefined;
+	older: JournalEntry | undefined;
+}
+
+const { entry, newer, older } = Astro.props;
+const { Content } = await render(entry);
+const { notes, posts } = await getJournalData();
+const day = getJournalLinks(entry, notes, posts);
+const { date, sprint, title, description } = entry.data;
+const key = gardenKey({ kind: "journal", id: entry.id });
+
+const linked: {
+	id: string;
+	heading: string;
+	empty: string;
+	items: (CollectionEntry<"note"> | CollectionEntry<"post">)[];
+	kind: "note" | "post";
+}[] = [
+	{
+		id: "linked-notes",
+		heading: "Linked notes",
+		empty: "No notes were published on this day.",
+		items: day.notes,
+		kind: "note",
+	},
+	{
+		id: "linked-posts",
+		heading: "Linked posts",
+		empty: "No posts were published on this day.",
+		items: day.posts,
+		kind: "post",
+	},
+];
+// already listed above, so Connections only shows the other links
+const shown = [
+	...day.notes.map((n) => gardenKey({ kind: "note", id: n.id })),
+	...day.posts.map((p) => gardenKey({ kind: "post", id: p.id })),
+];
+
+const meta = {
+	articleDate: date.toISOString(),
+	description: description ?? `Journal entry for ${date.toDateString()}`,
+	title,
+};
+---
+
+<JournalLayout
+	currentDate={{ year: date.getFullYear(), month: date.getMonth() + 1 }}
+	currentSprint={sprint}
+	meta={meta}
+>
+	<article data-pagefind-body>
+		<nav aria-label="Breadcrumb" class="mb-6 text-xs">
+			<ol class="flex flex-wrap items-center gap-1 opacity-80">
+				<li>
+					<a class="cactus-link" href="/journal/">
+						Journal
+					</a>
+				</li>
+				<li aria-hidden="true">/</li>
+				<li>
+					<a class="cactus-link" href={sprintUrl(sprint)}>
+						Sprint {sprint}
+					</a>
+				</li>
+			</ol>
+		</nav>
+		<header class="mb-10">
+			<div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+				<FormattedDate
+					class="text-muted font-semibold"
+					date={date}
+					dateTimeOptions={{ weekday: "long", month: "long" }}
+				/>
+				<a
+					class="bg-accent/15 text-accent rounded px-1.5 py-0.5 text-xs font-semibold hover:underline"
+					href={sprintUrl(sprint)}
+				>
+					Sprint {sprint}
+				</a>
+			</div>
+			<h1 class="title mt-2">{title}</h1>
+			{description && <p class="mt-3 italic opacity-90">{description}</p>}
+		</header>
+
+		<div class="prose prose-sm prose-headings:font-semibold prose-headings:text-accent-2 max-w-none">
+			<Content />
+		</div>
+	</article>
+
+	<div class="mt-12 space-y-6" data-pagefind-ignore>
+		{linked.map((group) => (
+			<section aria-labelledby={group.id} class="bg-note-bg/40 rounded-md p-4">
+				<h2 class="mb-3 text-xs font-bold tracking-widest uppercase opacity-70" id={group.id}>
+					{group.heading} {group.items.length > 0 && `(${group.items.length})`}
+				</h2>
+				{group.items.length > 0 ? (
+					<ul class="space-y-2">
+						{group.items.map((item) => (
+							<li class="flex flex-wrap items-baseline justify-between gap-x-4">
+								<a
+									class="cactus-link wiki-link text-accent-2 font-semibold"
+									data-wiki-target={gardenKey({ kind: group.kind, id: item.id })}
+									href={gardenUrl({ kind: group.kind, id: item.id })}
+								>
+									{item.data.title}
+								</a>
+								<FormattedDate class="text-xs opacity-70" date={item.data.publishDate} />
+							</li>
+						))}
+					</ul>
+				) : (
+					<p class="text-xs opacity-70">{group.empty}</p>
+				)}
+			</section>
+		))}
+
+		<section aria-labelledby="sprint-graph-heading" class="bg-note-bg/40 rounded-md p-4">
+			<h2
+				class="mb-3 text-xs font-bold tracking-widest uppercase opacity-70"
+				id="sprint-graph-heading"
+			>
+				In the graph
+			</h2>
+			<ul class="flex flex-wrap gap-x-6 gap-y-1 text-sm">
+				<li>
+					<a class="text-accent hover:underline" href={`/graph/?focus=${encodeURIComponent(key)}`}>
+						This entry
+					</a>
+				</li>
+				<li>
+					<a
+						class="text-accent hover:underline"
+						href={`/graph/?focus=${encodeURIComponent(sprintKey(sprint))}`}
+					>
+						Sprint {sprint} node
+					</a>
+				</li>
+			</ul>
+		</section>
+
+		{/* titles can contain "|", which would break a [[...]] hint, so suggest the file name */}
+		<Connections exclude={shown} gardenKey={key} title={entry.id.split("/").at(-1) ?? entry.id} />
+
+		{(newer || older) && (
+			<nav aria-label="More journal entries" class="flex flex-wrap justify-between gap-4 text-sm">
+				{older ? (
+					<a class="hover:text-link" href={journalUrl(older.id)}>
+						<span aria-hidden="true">←</span> {older.data.title}
+					</a>
+				) : (
+					<span />
+				)}
+				{newer && (
+					<a class="hover:text-link text-end" href={journalUrl(newer.id)}>
+						{newer.data.title} <span aria-hidden="true">→</span>
+					</a>
+				)}
+			</nav>
+		)}
+	</div>
+</JournalLayout>

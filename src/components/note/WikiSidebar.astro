@@ -1,6 +1,7 @@
 ---
 import type { MarkdownHeading } from "astro";
 import GardenPanel from "@/components/garden/GardenPanel.astro";
+import ChevronToggle from "@/components/note/ChevronToggle.astro";
 import WikiToc from "@/components/note/WikiToc.astro";
 import type { NoteCategory } from "@/data/note";
 
@@ -18,7 +19,10 @@ const total = categories.reduce((sum, c) => sum + c.notes.length, 0);
 const isIndex = !currentCategory && !currentNoteId;
 ---
 
-<aside aria-label="Notes sidebar" class="wiki-sidebar space-y-4 lg:sticky lg:top-8 lg:max-h-[calc(100vh-4rem)] lg:self-start lg:overflow-y-auto">
+<aside
+	aria-label="Notes sidebar"
+	class="wiki-sidebar space-y-4 lg:sticky lg:top-8 lg:max-h-[calc(100vh-4rem)] lg:self-start lg:overflow-y-auto"
+>
 	<GardenPanel placement="sidebar" />
 	<WikiToc headings={headings} />
 	<div class="border-accent/30 bg-note-bg/40 rounded-md border p-4">
@@ -26,57 +30,65 @@ const isIndex = !currentCategory && !currentNoteId;
 		<nav>
 			<ul class="space-y-1">
 				<li>
-					<a
-						aria-current={isIndex ? "page" : undefined}
-						class="wiki-sidebar-link"
-						href="/notes/"
-					>
+					<a aria-current={isIndex ? "page" : undefined} class="wiki-sidebar-link" href="/notes/">
 						<span>All notes</span>
 						<span class="wiki-count">{total}</span>
 					</a>
 				</li>
-				{
-					categories.map((category) => {
-						const active = category.slug === currentCategory;
-						return (
-							<li>
+				{categories.map((category) => {
+					const active = category.slug === currentCategory;
+					const listId = `wiki-cat-${category.slug}`;
+					return (
+						<li>
+							<div class="flex items-center gap-1">
+								<ChevronToggle
+									controls={listId}
+									expanded={active}
+									label={`Show notes in ${category.name}`}
+								/>
 								<a
 									aria-current={active && !currentNoteId ? "page" : undefined}
-									class:list={["wiki-sidebar-link", active && "is-active"]}
+									class:list={["wiki-sidebar-link grow", active && "is-active"]}
 									href={`/notes/category/${category.slug}/`}
 								>
 									<span>{category.name}</span>
 									<span class="wiki-count">{category.notes.length}</span>
 								</a>
-								{active && (
-									<ul class="border-accent/30 my-1 ms-3 space-y-1 border-s ps-3">
-										{category.notes.map((note) => (
-											<li>
-												<a
-													aria-current={note.id === currentNoteId ? "page" : undefined}
-													class="wiki-sidebar-sublink"
-													href={`/notes/${note.id}/`}
-												>
-													{note.data.title}
-												</a>
-											</li>
-										))}
-									</ul>
-								)}
-							</li>
-						);
-					})
-				}
+							</div>
+							<ul
+								class="border-accent/30 my-1 ms-8 space-y-1 border-s ps-3"
+								hidden={!active}
+								id={listId}
+							>
+								{category.notes.map((note) => (
+									<li>
+										<a
+											aria-current={note.id === currentNoteId ? "page" : undefined}
+											class="wiki-sidebar-sublink"
+											href={`/notes/${note.id}/`}
+										>
+											{note.data.title}
+										</a>
+									</li>
+								))}
+							</ul>
+						</li>
+					);
+				})}
 			</ul>
 		</nav>
 		<div class="border-accent/30 mt-4 flex flex-wrap gap-x-4 gap-y-1 border-t pt-3 text-xs">
 			<a
 				class="text-accent font-semibold hover:underline"
-				href={currentNoteId ? `/graph/?focus=${encodeURIComponent(`note:${currentNoteId}`)}` : "/graph/"}
+				href={
+					currentNoteId ? `/graph/?focus=${encodeURIComponent(`note:${currentNoteId}`)}` : "/graph/"
+				}
 			>
 				Graph view
 			</a>
-			<a class="text-accent hover:underline" href="/notes/rss.xml">RSS feed</a>
+			<a class="text-accent hover:underline" href="/notes/rss.xml">
+				RSS feed
+			</a>
 		</div>
 	</div>
 </aside>

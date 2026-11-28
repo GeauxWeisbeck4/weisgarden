@@ -7,15 +7,20 @@
  *   [[target#heading]]     link to a heading inside the note/post
  *   [[posts/target]]       only look in posts
  *   [[notes/target]]       only look in notes
+ *   [[journal/target]]     only look in journal entries
  *
  * (`post:target` / `note:target` also resolve, but in markdown files `:target` is parsed as a
  * text directive before this plugin sees it, so prefer the slash form.)
  *
  * `target` may be an entry id (`seedlings/my-note`), a file name (`my-note`) or a title
- * (`My Note`), all matched case-insensitively. Without a prefix, notes win over posts when both match.
+ * (`My Note`), all matched case-insensitively. Without a prefix, notes win over posts, and posts over
+ * journal entries, when more than one matches.
  */
 
-export type GardenKind = "note" | "post";
+export type GardenKind = "note" | "post" | "journal";
+
+const KIND_ORDER: Record<GardenKind, number> = { note: 0, post: 1, journal: 2 };
+const KIND_PATH: Record<GardenKind, string> = { note: "notes", post: "posts", journal: "journal" };
 
 export interface WikiRef {
 	kind: GardenKind;
@@ -39,7 +44,7 @@ export const WIKI_LINK_RE = /\[\[([^[\]|#\n]+)(?:#([^[\]|\n]+))?(?:\|([^[\]\n]+)
 export const gardenKey = (ref: Pick<WikiRef, "kind" | "id">) => `${ref.kind}:${ref.id}`;
 
 export const gardenUrl = (ref: Pick<WikiRef, "kind" | "id">) =>
-	`/${ref.kind === "note" ? "notes" : "posts"}/${ref.id}/`;
+	`/${KIND_PATH[ref.kind]}/${ref.id}/`;
 
 /** Mirrors github-slugger, which Astro's glob loader uses to build entry ids. */
 export function githubSlug(value: string) {
@@ -64,16 +69,18 @@ const normalise = (s: string) =>
 		.toLowerCase()
 		.replace(/\.mdx?$/, "");
 
-const PREFIX_RE = /^(note|post)s?[:/]\s*/i;
+const PREFIX_RE = /^(note|post|journal)s?[:/]\s*/i;
 
 /** Build a resolver that maps a wiki-link target to a note or post */
 export function createWikiResolver(refs: WikiRef[]) {
-	// notes first so an un-prefixed target prefers a note
-	const ordered = [...refs].sort((a, b) => (a.kind === b.kind ? 0 : a.kind === "note" ? -1 : 1));
-	const maps = { any: new Map<string, WikiRef>(), note: new Map(), post: new Map() } as Record<
-		"any" | GardenKind,
-		Map<string, WikiRef>
-	>;
+	// notes first so an un-prefixed target prefers a note, then posts, then journal entries
+	const ordered = [...refs].sort((a, b) => KIND_ORDER[a.kind] - KIND_ORDER[b.kind]);
+	const maps = {
+		any: new Map<string, WikiRef>(),
+		note: new Map(),
+		post: new Map(),
+		journal: new Map(),
+	} as Record<"any" | GardenKind, Map<string, WikiRef>>;
 	const add = (key: string, ref: WikiRef) => {
 		const k = normalise(key);
 		if (!k) return;

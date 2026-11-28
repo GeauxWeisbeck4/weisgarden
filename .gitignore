@@ -28,3 +28,6 @@ pnpm-debug.log*
 /.idea/modules.xml
 /.idea/prettier.xml
 /.idea/vcs.xml
+/.idea
+/.codebuddy
+qodana.yaml

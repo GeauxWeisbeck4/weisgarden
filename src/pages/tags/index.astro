@@ -13,10 +13,10 @@ const meta = {
 
 <PageLayout meta={meta}>
 	<h1 class="title mb-6">Tags</h1>
-	<ul class="space-y-4">
+	<ul class="grid grid-cols-3 space-y-2">
 		{
 			allTags.map(([tag, val]) => (
-				<li class="flex items-center gap-x-2">
+				<li class="flex items-center gap-x-1">
 					<a
 						class="cactus-link inline-block"
 						href={`/tags/${tag}/`}

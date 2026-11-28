@@ -3,7 +3,7 @@ title: "Day One - Commit Constellation"
 description: "Day one of the 50 days of projects is going to kick us off with a commit constellation app, an app that allows users to see how their Git repositories and other tools + users are connected."
 publishDate: "22 Nov 2026"
 updatedDate: "22 Nov 2026"
-tags: ["project", "50-days-of-projects", "in-progress", "day-one", "neo4j", "nodejs", "typescript", "express", "tailwindcss"]
+tags: ["project", "daily-dev", "in-progress", "day-one", "neo4j", "nodejs", "typescript", "express", "tailwindcss"]
 pinned: true
 ---
 

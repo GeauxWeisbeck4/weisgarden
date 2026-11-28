@@ -1,32 +1,20 @@
 ---
-import { type CollectionEntry, getCollection } from "astro:content";
-import PostPreview from "@/components/blog/PostPreview.astro";
-import Note from "@/components/note/Note.astro";
+import type { CollectionEntry } from "astro:content";
+import FormattedDate from "@/components/FormattedDate.astro";
+import NoteCategoryList from "@/components/note/NoteCategoryList.astro";
 import SocialList from "@/components/SocialList.astro";
+import { getAllNotes, groupNotesByCategory } from "@/data/note";
 import { getAllPosts } from "@/data/post";
 import PageLayout from "@/layouts/Base.astro";
 import { collectionDateSort } from "@/utils/date";
 
-// Posts
-const MAX_POSTS = 10;
-const allPosts = await getAllPosts();
-const allPostsByDate = allPosts.sort(collectionDateSort) as CollectionEntry<"post">[];
-const latestPosts = allPostsByDate.slice(0, MAX_POSTS);
-
-// Pinned Posts, set to a max of 3;
-const MAX_PINNED_POSTS = 3;
-const pinnedPosts = allPostsByDate
-	.values()
+// Pinned posts, newest first
+const pinnedPosts = (await getAllPosts())
 	.filter((p) => p.data.pinned)
-	.take(MAX_PINNED_POSTS)
-	.toArray();
+	.sort(collectionDateSort) as CollectionEntry<"post">[];
 
-// Notes, set to a max of 5
-const MAX_NOTES = 5;
-const allNotes = await getCollection("note");
-const latestNotes = allNotes
-	.sort(collectionDateSort)
-	.slice(0, MAX_NOTES) as CollectionEntry<"note">[];
+// Notes, grouped by category
+const noteCategories = groupNotesByCategory(await getAllNotes());
 ---
 
 <PageLayout meta={{ title: "Home" }}>
@@ -39,46 +27,37 @@ const latestNotes = allNotes
 		</p>
 		<SocialList />
 	</section>
-	{
-		pinnedPosts.length > 0 && (
-			<section class="mt-16">
-				<h2 class="text-accent mb-6 text-xl">Pinned Posts</h2>
-				<ul class="space-y-4" role="list">
-					{pinnedPosts.map((p) => (
-						<li class="grid gap-1 sm:grid-cols-[auto_1fr]">
-							<PostPreview post={p} />
-						</li>
-					))}
-				</ul>
-			</section>
-		)
-	}
-	<section class="mt-16">
-		<h2 class="text-accent mb-6 text-xl"><a href="/posts/">Posts</a></h2>
-		<ul class="space-y-4" role="list">
-			{
-				latestPosts.map((p) => (
-					<li class="grid gap-1 sm:grid-cols-[auto_1fr]">
-						<PostPreview post={p} />
+	{pinnedPosts.length > 0 && (
+		<section class="mt-16">
+			<h2 class="text-accent mb-6 flex items-baseline justify-between gap-4 text-xl">
+				Pinned Posts
+				<a class="hover:text-link text-sm" href="/posts/">
+					View all posts <span aria-hidden="true">→</span>
+				</a>
+			</h2>
+			<ul class="space-y-4" role="list">
+				{pinnedPosts.map((p) => (
+					<li>
+						<article class="bg-note-bg hover:bg-note-bg/40 w-full rounded-lg p-5 transition-colors duration-200 motion-reduce:transition-none">
+							<h3 class="text-lg font-semibold">
+								<a class="cactus-link" href={`/posts/${p.id}/`}>
+									{p.data.title}
+								</a>
+							</h3>
+							<FormattedDate class="text-muted mt-1 block text-sm" date={p.data.publishDate} />
+							<p class="mt-3">{p.data.description}</p>
+						</article>
 					</li>
-				))
-			}
-		</ul>
-	</section>
-	{
-		latestNotes.length > 0 && (
-			<section class="mt-16">
-				<h2 class="text-accent mb-6 text-xl">
-					<a href="/notes/">Notes</a>
-				</h2>
-				<ul class="space-y-6" role="list">
-					{latestNotes.map((note) => (
-						<li>
-							<Note note={note} as="h3" isPreview />
-						</li>
-					))}
-				</ul>
-			</section>
-		)
-	}
+				))}
+			</ul>
+		</section>
+	)}
+	{noteCategories.length > 0 && (
+		<section class="mt-16">
+			<h2 class="text-accent mb-6 text-xl">
+				<a href="/notes/">Notes</a>
+			</h2>
+			<NoteCategoryList categories={noteCategories} headingLevel="h3" />
+		</section>
+	)}
 </PageLayout>

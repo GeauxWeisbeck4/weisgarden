@@ -1,12 +1,15 @@
 /**
  * The "garden": notes and posts treated as one connected graph.
  *
- * Nodes are notes and (published) posts. They're connected by:
- *  - `[[wiki-links]]` written in either collection (explicit links)
- *  - the section they live in (note category, or the post's top-level folder)
+ * Nodes are notes, (published) posts and journal entries. They're connected by:
+ *  - `[[wiki-links]]` written in any collection (explicit links)
+ *  - a journal entry's links to the notes and posts published on its day
+ *  - the section they live in (note category, the post's top-level folder, or "Journal")
+ *  - the sprint a journal entry belongs to
  *  - shared tags
  */
 import type { CollectionEntry } from "astro:content";
+import { getAllJournalEntries, getJournalLinks, journalUrl } from "@/data/journal";
 import { getAllNotes, getNoteCategory, slugifyCategory } from "@/data/note";
 import { getAllPosts } from "@/data/post";
 import {
@@ -37,7 +40,9 @@ export interface GardenEntry {
 	status: string[];
 	section: GardenSection;
 	body: string;
-	entry: CollectionEntry<"note"> | CollectionEntry<"post">;
+	/** journal entries only */
+	sprint?: number | undefined;
+	entry: CollectionEntry<"note"> | CollectionEntry<"post"> | CollectionEntry<"journal">;
 }
 
 export interface GardenLink {
@@ -69,12 +74,26 @@ function postSection(post: CollectionEntry<"post">): GardenSection {
 	return { key: `section:post:${slugifyCategory(name)}`, name, kind: "post", url: "/posts/" };
 }
 
+export const JOURNAL_SECTION: GardenSection = {
+	key: "section:journal:journal",
+	name: "Journal",
+	kind: "journal",
+	url: "/journal/",
+};
+
+/** notes, then posts, then the journal */
+export const KIND_RANK: Record<GardenKind, number> = { note: 0, post: 1, journal: 2 };
+
 let cache: Promise<GardenEntry[]> | undefined;
 
-/** Every note and published post, newest first */
+/** Every note, published post and journal entry, newest first */
 export function getGardenEntries(): Promise<GardenEntry[]> {
 	cache ??= (async () => {
-		const [notes, posts] = await Promise.all([getAllNotes(), getAllPosts()]);
+		const [notes, posts, journal] = await Promise.all([
+			getAllNotes(),
+			getAllPosts(),
+			getAllJournalEntries(),
+		]);
 		const entries: GardenEntry[] = [
 			...notes.map((note) => ({
 				key: gardenKey({ kind: "note", id: note.id }),
@@ -104,26 +123,57 @@ export function getGardenEntries(): Promise<GardenEntry[]> {
 				body: post.body ?? "",
 				entry: post,
 			})),
+			...journal.map((day) => ({
+				key: gardenKey({ kind: "journal", id: day.id }),
+				kind: "journal" as const,
+				id: day.id,
+				title: day.data.title,
+				url: journalUrl(day.id),
+				description: day.data.description ?? "",
+				date: day.data.date,
+				tags: day.data.tags,
+				status: [],
+				section: JOURNAL_SECTION,
+				body: day.body ?? "",
+				sprint: day.data.sprint,
+				entry: day,
+			})),
 		];
 		return entries.sort((a, b) => b.date.valueOf() - a.date.valueOf());
 	})();
 	return cache;
 }
 
-/** Every resolved `[[wiki-link]]` in the garden, de-duplicated, as `source -> target` key pairs */
+/** Every resolved `[[wiki-link]]` in the garden, plus each journal entry's links to the notes and
+ *  posts from its day, de-duplicated, as `source -> target` key pairs */
 export function getGardenLinks(entries: GardenEntry[]): GardenLink[] {
 	const byKey = new Map(entries.map((e) => [e.key, e]));
 	const resolve = createWikiResolver(entries.map(({ kind, id, title }) => ({ kind, id, title })));
 	const seen = new Set<string>();
 	const links: GardenLink[] = [];
+	const add = (source: string, target: string | undefined) => {
+		const pair = `${source}\u0000${target}`;
+		if (!target || !byKey.has(target) || target === source || seen.has(pair)) return;
+		seen.add(pair);
+		links.push({ source, target });
+	};
+
+	const notes = entries.flatMap((e) =>
+		e.kind === "note" ? [e.entry as CollectionEntry<"note">] : [],
+	);
+	const posts = entries.flatMap((e) =>
+		e.kind === "post" ? [e.entry as CollectionEntry<"post">] : [],
+	);
+
 	for (const entry of entries) {
 		for (const link of parseWikiLinks(stripCode(entry.body))) {
 			const ref = resolve(link.target);
-			const target = ref && gardenKey(ref);
-			const pair = `${entry.key}\u0000${target}`;
-			if (!target || !byKey.has(target) || target === entry.key || seen.has(pair)) continue;
-			seen.add(pair);
-			links.push({ source: entry.key, target });
+			add(entry.key, ref && gardenKey(ref));
+		}
+		if (entry.kind === "journal") {
+			const day = getJournalLinks(entry.entry as CollectionEntry<"journal">, notes, posts);
+			for (const n of day.notes) add(entry.key, gardenKey({ kind: "note", id: n.id }));
+			for (const p of day.posts) add(entry.key, gardenKey({ kind: "post", id: p.id }));
 		}
 	}
 	return links;

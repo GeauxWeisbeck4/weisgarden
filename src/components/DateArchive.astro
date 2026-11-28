@@ -1,0 +1,91 @@
+---
+import type { ArchiveYear } from "@/utils/archive";
+
+interface Props {
+	archive: ArchiveYear[];
+	/** where the year/month pages live, e.g. "/posts/archive" -> /posts/archive/2026/11/ */
+	baseUrl: string;
+	title?: string;
+	/** what's being counted, for screen readers */
+	noun?: { one: string; many: string };
+	/** highlights the year (and optionally month) currently being viewed */
+	current?: { year: number; month?: number };
+}
+
+const {
+	archive,
+	baseUrl,
+	current,
+	title = "Archive",
+	noun = { one: "post", many: "posts" },
+} = Astro.props;
+const headingId = `archive-heading-${baseUrl.replace(/[^a-z0-9]+/gi, "-")}`;
+---
+
+{archive.length > 0 && (
+	<nav aria-labelledby={headingId}>
+		<h2 id={headingId} class="title mb-4 flex items-center gap-1 text-lg">
+			<svg
+				aria-hidden="true"
+				class="h-6 w-6"
+				fill="none"
+				stroke="var(--color-muted)"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="1.5"
+				viewBox="0 0 24 24"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<path d="M0 0h24v24H0z" fill="none" stroke="none" />
+				<path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" />
+				<path d="M16 3v4" />
+				<path d="M8 3v4" />
+				<path d="M4 11h16" />
+			</svg>
+			{title}
+		</h2>
+		<ul class="space-y-2" role="list">
+			{archive.map(({ year, count, months }, i) => {
+				const isCurrentYear = current?.year === year;
+				return (
+					<li>
+						<details open={current ? isCurrentYear : i === 0}>
+							<summary class="hover:marker:text-accent cursor-pointer">
+								<a
+									class:list={[
+										"hover:text-link",
+										{ "text-accent font-semibold": isCurrentYear && !current?.month },
+									]}
+									aria-current={isCurrentYear && !current?.month ? "page" : undefined}
+									href={`${baseUrl}/${year}/`}
+								>
+									{year} ({count}) <span class="sr-only">{count === 1 ? noun.one : noun.many}</span>
+								</a>
+							</summary>
+							<ul class="mt-1 ms-4 space-y-1" role="list">
+								{months.map((m) => {
+									const isCurrentMonth = isCurrentYear && current?.month === m.month;
+									return (
+										<li>
+											<a
+												class:list={[
+													"hover:text-link",
+													{ "text-accent font-semibold": isCurrentMonth },
+												]}
+												aria-current={isCurrentMonth ? "page" : undefined}
+												href={`${baseUrl}/${year}/${m.slug}/`}
+											>
+												{m.label} ({m.count})
+												<span class="sr-only">{m.count === 1 ? noun.one : noun.many}</span>
+											</a>
+										</li>
+									);
+								})}
+							</ul>
+						</details>
+					</li>
+				);
+			})}
+		</ul>
+	</nav>
+)}

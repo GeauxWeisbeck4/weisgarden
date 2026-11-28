@@ -55,6 +55,8 @@
 	const HIDE_DELAY = 200;
 	const GAP = 8;
 
+	const KIND_LABEL = { note: "Note", post: "Post", journal: "Journal" } as const;
+
 	let data: Promise<Record<string, Preview>> | undefined;
 	const loadPreviews = () => {
 		data ??= loadGarden().then(({ nodes, sections }) => {
@@ -66,7 +68,7 @@
 						title: n.title,
 						description: n.description,
 						excerpt: n.excerpt,
-						category: `${n.kind === "note" ? "Note" : "Post"} · ${sectionName.get(n.section) ?? ""}`,
+						category: `${KIND_LABEL[n.kind]} · ${sectionName.get(n.section) ?? ""}`,
 						date: n.date,
 						status: n.status,
 					},
@@ -128,7 +130,8 @@
 		const { offsetWidth: w, offsetHeight: h } = el;
 		const left = Math.min(Math.max(GAP * 2, rect.left), window.innerWidth - w - GAP * 2);
 		const below = rect.bottom + GAP;
-		const top = below + h > window.innerHeight && rect.top - h - GAP > 0 ? rect.top - h - GAP : below;
+		const top =
+			below + h > window.innerHeight && rect.top - h - GAP > 0 ? rect.top - h - GAP : below;
 		el.style.left = `${left}px`;
 		el.style.top = `${top}px`;
 	}

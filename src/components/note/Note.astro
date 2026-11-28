@@ -18,13 +18,9 @@ const { Content } = await render(note);
 >
 	<Tag class="title" class:list={{ "text-base": isPreview }}>
 		{
-			isPreview ? (
-				<a class="cactus-link" href={`/notes/${note.id}/`}>
+			isPreview ? <a class="cactus-link" href={`/notes/${note.id}/`}>
 					{note.data.title}
-				</a>
-			) : (
-				<>{note.data.title}</>
-			)
+				</a> : <>{note.data.title}</>
 		}
 	</Tag>
 	<FormattedDate

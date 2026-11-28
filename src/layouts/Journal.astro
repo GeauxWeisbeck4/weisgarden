@@ -1,0 +1,42 @@
+---
+import DateArchive from "@/components/DateArchive.astro";
+import SprintList from "@/components/journal/SprintList.astro";
+import { getJournalArchive, getJournalData, getJournalSprints } from "@/data/journal";
+import PageLayout from "@/layouts/Base.astro";
+import type { SiteMeta } from "@/types";
+
+interface Props {
+	meta: SiteMeta;
+	/** the year (and month) being viewed, highlighted in the archive panel */
+	currentDate?: { year: number; month?: number | undefined } | undefined;
+	/** the sprint being viewed, highlighted in the sprints panel */
+	currentSprint?: number | undefined;
+}
+
+const { meta, currentDate, currentSprint } = Astro.props;
+const { entries } = await getJournalData();
+const archive = getJournalArchive(entries);
+const sprints = getJournalSprints(entries);
+---
+
+<PageLayout meta={meta}>
+	<div class="grid gap-y-16 sm:grid-cols-[3fr_1fr] sm:gap-x-8">
+		<div class="min-w-0">
+			<slot />
+		</div>
+		<aside aria-label="Journal sidebar" class="space-y-12">
+			<DateArchive
+				archive={archive}
+				baseUrl="/journal/archive"
+				noun={{ one: "entry", many: "entries" }}
+				current={
+					currentDate && {
+						year: currentDate.year,
+						...(currentDate.month && { month: currentDate.month }),
+					}
+				}
+			/>
+			<SprintList current={currentSprint} sprints={sprints} />
+		</aside>
+	</div>
+</PageLayout>

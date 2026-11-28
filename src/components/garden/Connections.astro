@@ -3,22 +3,30 @@ import FormattedDate from "@/components/FormattedDate.astro";
 import { type GardenEntry, getConnections, getGardenEntries, getGardenLinks } from "@/data/garden";
 
 interface Props {
-	/** garden key of the current page, e.g. `note:welcome` or `post:journal/foo` */
+	/** garden key of the current page, e.g. `note:welcome` or `journal:november-2026/foo` */
 	gardenKey: string;
 	/** the title used in the "link to this with [[...]]" hint */
 	title: string;
 	class?: string;
+	/** garden keys already shown elsewhere on the page, left out of this list */
+	exclude?: string[];
 }
 
-const { gardenKey, title, class: className } = Astro.props;
+const { gardenKey, title, class: className, exclude = [] } = Astro.props;
 const entries = await getGardenEntries();
-const { incoming, outgoing } = getConnections(gardenKey, entries, getGardenLinks(entries));
-const kindLabel = (e: GardenEntry) => (e.kind === "note" ? "Note" : "Post");
+const connections = getConnections(gardenKey, entries, getGardenLinks(entries));
+const skip = new Set(exclude);
+const incoming = connections.incoming.filter((e) => !skip.has(e.key));
+const outgoing = connections.outgoing.filter((e) => !skip.has(e.key));
+const KIND_LABEL = { note: "Note", post: "Post", journal: "Journal" } as const;
+const kindLabel = (e: GardenEntry) => KIND_LABEL[e.kind];
 const groups = [
 	{ id: "linked-from", label: "Linked from", items: incoming },
 	{ id: "links-to", label: "Links to", items: outgoing },
 ].filter((g) => g.items.length > 0);
-const isPost = gardenKey.startsWith("post:");
+const kind = (gardenKey.split(":")[0] ?? "note") as keyof typeof KIND_LABEL;
+const linkHint = { note: title, post: `posts/${title}`, journal: `journal/${title}` }[kind];
+const kindName = { note: "note", post: "post", journal: "journal entry" }[kind];
 ---
 
 <section
@@ -28,45 +36,47 @@ const isPost = gardenKey.startsWith("post:");
 >
 	<div class="mb-3 flex flex-wrap items-baseline justify-between gap-2">
 		<h2 class="text-xs font-bold tracking-widest uppercase opacity-70" id="connections-heading">
-			Connections {incoming.length + outgoing.length > 0 && `(${incoming.length + outgoing.length})`}
+			Connections{" "}
+			{incoming.length + outgoing.length > 0 && `(${incoming.length + outgoing.length})`}
 		</h2>
-		<a class="text-accent text-xs hover:underline" href={`/graph/?focus=${encodeURIComponent(gardenKey)}`}>
+		<a
+			class="text-accent text-xs hover:underline"
+			href={`/graph/?focus=${encodeURIComponent(gardenKey)}`}
+		>
 			See it in the graph
 		</a>
 	</div>
-	{
-		groups.length > 0 ? (
-			<div class="space-y-4">
-				{groups.map((group) => (
-					<div>
-						<h3 class="mb-2 text-xs opacity-70">{group.label}</h3>
-						<ul class="space-y-2">
-							{group.items.map((e) => (
-								<li class="flex flex-wrap items-baseline justify-between gap-x-4">
-									<span class="flex items-baseline gap-2">
-										<span class="bg-global-bg/70 rounded px-1.5 text-[0.65rem] tracking-wide uppercase opacity-80">
-											{kindLabel(e)}
-										</span>
-										<a
-											class="cactus-link wiki-link text-accent-2 font-semibold"
-											data-wiki-target={e.key}
-											href={e.url}
-										>
-											{e.title}
-										</a>
+	{groups.length > 0 ? (
+		<div class="space-y-4">
+			{groups.map((group) => (
+				<div>
+					<h3 class="mb-2 text-xs opacity-70">{group.label}</h3>
+					<ul class="space-y-2">
+						{group.items.map((e) => (
+							<li class="flex flex-wrap items-baseline justify-between gap-x-4">
+								<span class="flex items-baseline gap-2">
+									<span class="bg-global-bg/70 rounded px-1.5 text-[0.65rem] tracking-wide uppercase opacity-80">
+										{kindLabel(e)}
 									</span>
-									<FormattedDate class="text-xs opacity-70" date={e.date} />
-								</li>
-							))}
-						</ul>
-					</div>
-				))}
-			</div>
-		) : (
-			<p class="text-xs opacity-70">
-				Nothing links here yet. Link to this {isPost ? "post" : "note"} from any note or post with
-				<code>[[{isPost ? `posts/${title}` : title}]]</code>.
-			</p>
-		)
-	}
+									<a
+										class="cactus-link wiki-link text-accent-2 font-semibold"
+										data-wiki-target={e.key}
+										href={e.url}
+									>
+										{e.title}
+									</a>
+								</span>
+								<FormattedDate class="text-xs opacity-70" date={e.date} />
+							</li>
+						))}
+					</ul>
+				</div>
+			))}
+		</div>
+	) : (
+		<p class="text-xs opacity-70">
+			Nothing {exclude.length > 0 ? "else " : ""}links here yet. Link to this {kindName} from any
+			note, post or journal entry with <code>[[{linkHint}]]</code>.
+		</p>
+	)}
 </section>

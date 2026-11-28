@@ -26,6 +26,8 @@ export default defineConfig({
 	redirects: {
 		// the notes-only graph became the whole-garden graph
 		"/notes/graph": "/graph",
+		// journal entries used to be blog posts
+		"/posts/journal/[...slug]": "/journal/[...slug]",
 	},
 	image: {
 		domains: ["webmention.io"],

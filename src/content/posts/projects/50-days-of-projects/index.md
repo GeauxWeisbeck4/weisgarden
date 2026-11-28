@@ -3,7 +3,7 @@ title: "50 Days of Projects"
 description: "I am creating 50 different projects each day - not necessarily back to back, but it will take 50 separate days for sure."
 publishDate: "22 Nov 2026"
 updatedDate: "22 Nov 2026"
-tags: ["project", "50-days-of-projects", "in-progress"]
+tags: ["project", "daily-dev", "in-progress"]
 pinned: true
 ---
 

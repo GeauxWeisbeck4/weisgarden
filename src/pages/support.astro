@@ -1,41 +1,191 @@
 ---
+import { Icon } from "astro-icon/components";
+import { contactFormAction, creatorPlatforms, currency, newsletter } from "@/data/support";
 import PageLayout from "@/layouts/Base.astro";
 
 const meta = {
 	description:
-		"Help support Andrew's journey as a developer and creator - anything and everything is appreciated and welcomed, than you!",
+		"Help support Andrew's journey as a developer and creator - anything and everything is appreciated and welcomed, thank you!",
 	title: "Support",
 };
+
+const money = new Intl.NumberFormat("en-US", {
+	style: "currency",
+	currency,
+	maximumFractionDigits: 0,
+});
+const formReady = contactFormAction.length > 0;
 ---
 
 <PageLayout meta={meta}>
-	<h1 class="title mb-12">Support</h1>
-	<div class="prose prose-sm prose-cactus max-w-none">
-		<p>
-			If you would like to support me and my work, you can do so by donating via the links below.
-			Any amount is greatly appreciated and will help me continue to create content and improve my
-			skills as a developer.
-		</p>
-		<!-- TODO: Refactor these links to `config.ts` and style for v1.0.0 -->
-		<ul class="list-inside list-disc" role="list">
-			<li>
-				<a
-					href="https://www.buymeacoffee.com/geauxweisbeck4"
-					target="_blank"
-					rel="noopener noreferrer">Buy Me a Coffee</a
-				>
-			</li>
-			<li>
-				<a href="https://www.patreon.com/geauxweisbeck4" target="_blank" rel="noopener noreferrer"
-					>Patreon</a
-				>
-			</li>
-			<li>
-				<a href="https://ko-fi.com/geauxweisbeck4" target="_blank" rel="noopener noreferrer"
-					>Ko-Fi</a
-				>
-			</li>
+	<h1 class="title mb-6">Support</h1>
+	<p class="mb-10 opacity-90">
+		If you'd like to support me and my work, you can do it on any of the platforms below. Any amount
+		is greatly appreciated and helps me keep creating content and building things. Thank you!
+	</p>
+
+	<!-- Creator platforms -->
+	<section aria-labelledby="platforms-heading">
+		<h2 class="sr-only" id="platforms-heading">Creator platforms</h2>
+		<ul class="grid gap-4 sm:grid-cols-2" role="list">
+			{
+				creatorPlatforms.map((p) => (
+					<li>
+						<article class="support-card flex h-full gap-4">
+							<a
+								aria-label={p.name}
+								class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-global-bg/70 transition-transform hover:scale-105"
+								href={p.url}
+								rel="noopener noreferrer"
+								tabindex="-1"
+								target="_blank"
+							>
+								<Icon
+									aria-hidden="true"
+									class="h-8 w-8"
+									focusable="false"
+									name={p.icon}
+									style={`color: ${p.color}`}
+								/>
+							</a>
+							<div class="min-w-0">
+								<h3 class="flex flex-wrap items-center gap-x-2 gap-y-1 text-lg font-semibold">
+									<a class="cactus-link" href={p.url} rel="noopener noreferrer" target="_blank">
+										{p.name}
+										<span class="sr-only">(opens in a new tab)</span>
+									</a>
+									<span class="bg-accent/15 text-accent rounded px-1.5 py-0.5 text-xs font-semibold tabular-nums">
+										{money.format(p.earned)}
+										<span class="sr-only">earned</span>
+									</span>
+								</h3>
+								<p class="mt-1 text-sm opacity-90">{p.description}</p>
+							</div>
+						</article>
+					</li>
+				))
+			}
 		</ul>
-		<p>Thank you for your support!</p>
-	</div>
+	</section>
+
+	<!-- Contact form -->
+	<section aria-labelledby="contact-heading" class="mt-16">
+		<h2 class="text-accent mb-2 text-xl font-semibold" id="contact-heading">Get in touch</h2>
+		<p class="mb-6 text-sm opacity-90">
+			Questions, ideas, freelance work or just saying hi? Send me a message and I'll get back to you.
+		</p>
+		<form
+			action={formReady ? contactFormAction : undefined}
+			class="support-card space-y-4"
+			data-contact-form
+			method="POST"
+		>
+			<div class="grid gap-4 sm:grid-cols-2">
+				<label class="block">
+					<span class="text-sm font-semibold">Name</span>
+					<input autocomplete="name" class="support-input" name="name" required type="text" />
+				</label>
+				<label class="block">
+					<span class="text-sm font-semibold">Email</span>
+					<input autocomplete="email" class="support-input" name="email" required type="email" />
+				</label>
+			</div>
+			<label class="block">
+				<span class="text-sm font-semibold">Subject</span>
+				<input class="support-input" name="subject" type="text" />
+			</label>
+			<label class="block">
+				<span class="text-sm font-semibold">Message</span>
+				<textarea class="support-input min-h-36" name="message" required rows="6"></textarea>
+			</label>
+			<!-- spam trap: real people never fill this in -->
+			<input aria-hidden="true" class="hidden" name="_gotcha" tabindex="-1" type="text" />
+			<div class="flex flex-wrap items-center gap-4">
+				<button
+					class="bg-accent text-global-bg rounded-md px-5 py-2 font-semibold transition-opacity hover:opacity-85 disabled:cursor-not-allowed disabled:opacity-50"
+					disabled={!formReady}
+					type="submit"
+				>
+					Send message
+				</button>
+				<p aria-live="polite" class="text-sm" data-form-status>
+					{!formReady && "The contact form isn't set up yet. Please check back soon!"}
+				</p>
+			</div>
+		</form>
+	</section>
+
+	<!-- Newsletter -->
+	<section aria-labelledby="newsletter-heading" class="mt-16">
+		<div class="support-card">
+			<div class="flex items-center gap-3">
+				<Icon
+					aria-hidden="true"
+					class="h-8 w-8 shrink-0"
+					focusable="false"
+					name="logos/substack"
+					style="color: #FF6719"
+				/>
+				<h2 class="text-xl font-semibold" id="newsletter-heading">
+					<a class="cactus-link" href={newsletter.url} rel="noopener noreferrer" target="_blank">
+						{newsletter.name}
+					</a>
+				</h2>
+			</div>
+			<p class="mt-3 text-sm opacity-90">{newsletter.description}</p>
+			<iframe
+				class="mt-5 h-80 w-full rounded-lg border-0 bg-white"
+				loading="lazy"
+				src={`${newsletter.url}/embed`}
+				title={`Subscribe to ${newsletter.name} on Substack`}></iframe>
+			<p class="text-muted mt-2 text-xs">
+				Form not loading?{" "}
+				<a class="cactus-link" href={newsletter.url} rel="noopener noreferrer" target="_blank">
+					Subscribe on Substack
+				</a>
+			</p>
+		</div>
+	</section>
 </PageLayout>
+
+<script>
+	// send the form in the background so visitors stay on the page
+	const form = document.querySelector<HTMLFormElement>("[data-contact-form]");
+	const status = form?.querySelector<HTMLElement>("[data-form-status]");
+	form?.addEventListener("submit", async (event) => {
+		if (!form.action || !status) return;
+		event.preventDefault();
+		const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+		if (button) button.disabled = true;
+		status.textContent = "Sending…";
+		try {
+			const response = await fetch(form.action, {
+				method: "POST",
+				body: new FormData(form),
+				headers: { Accept: "application/json" },
+			});
+			if (!response.ok) throw new Error(String(response.status));
+			form.reset();
+			status.textContent = "Thanks! Your message is on its way.";
+		} catch {
+			status.textContent = "Sorry, that didn't send. Please try again in a moment.";
+		} finally {
+			if (button) button.disabled = false;
+		}
+	});
+</script>
+
+<style>
+	@reference "../styles/global.css";
+
+	.support-card {
+		@apply bg-note-bg hover:bg-note-bg/40 rounded-lg p-5 transition-colors duration-200 motion-reduce:transition-none;
+	}
+	form.support-card:hover,
+	form.support-card:focus-within {
+		@apply bg-note-bg;
+	}
+	.support-input {
+		@apply border-accent/40 bg-global-bg/80 focus:border-accent focus:ring-accent/30 mt-1 block w-full rounded-md border px-3 py-2 text-sm focus:ring-2 focus:outline-none;
+	}
+</style>

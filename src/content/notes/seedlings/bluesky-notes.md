@@ -20,16 +20,16 @@ Anyways, I have created a bunch of little recipes, hacks, and tips for any of yo
 
 1. Login to your Bluesky page and go to the settings section. Click on the "Account" page as shown in the picture below:
 
-![Bluesky Settings Page](./public/notes/bskypost1.png)
+![Bluesky Settings Page](/public/notes/bskypost1.png)
 
 2. Next, you will click on the handle setting:
 
-![Bluesky Handle Setting](./public/notes/bskypost2.png)
+![Bluesky Handle Setting](/public/notes/bskypost2.png)
 
 3. Then click on "I have my own domain":
 
-![Bluesky I Have My Own Domain](./public/notes/bskypost3.png)
+![Bluesky I Have My Own Domain](/public/notes/bskypost3.png)
 
 4. See the image where I have underlined the number - that is your plc handle #!
 
-![Bluesky plc handle #](./public/notes/bskypost4.png)
+![Bluesky plc handle #](/public/notes/bskypost4.png)

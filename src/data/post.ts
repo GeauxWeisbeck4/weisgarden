@@ -1,4 +1,5 @@
 import { type CollectionEntry, getCollection } from "astro:content";
+import { type ArchiveYear, buildDateArchive } from "@/utils/archive";
 
 /** filter out draft posts based on the environment */
 export async function getAllPosts(): Promise<CollectionEntry<"post">[]> {
@@ -46,4 +47,13 @@ export function getUniqueTagsWithCount(posts: CollectionEntry<"post">[]): [strin
 			new Map<string, number>(),
 		),
 	].sort((a, b) => b[1] - a[1]);
+}
+
+export type { ArchiveYear } from "@/utils/archive";
+
+/** returns posts grouped by year and month with counts, newest first.
+ *  Note: This function doesn't filter draft posts, pass it the result of getAllPosts above to do so.
+ *  */
+export function getPostArchive(posts: CollectionEntry<"post">[]): ArchiveYear[] {
+	return buildDateArchive(posts.map((post) => post.data.publishDate));
 }

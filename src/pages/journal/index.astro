@@ -1,0 +1,28 @@
+---
+import Timeline from "@/components/journal/Timeline.astro";
+import { getJournalData, getJournalSprints } from "@/data/journal";
+import JournalLayout from "@/layouts/Journal.astro";
+
+const { entries, notes, posts } = await getJournalData();
+const sprints = getJournalSprints(entries);
+
+const meta = {
+	description: "A day-by-day journal of what I'm building, learning and thinking about",
+	title: "Journal",
+};
+---
+
+<JournalLayout meta={meta}>
+	<h1 class="title mb-3">Journal</h1>
+	<p class="mb-10 opacity-90">
+		{entries.length}
+		{entries.length === 1 ? " entry" : " entries"} across {sprints.length}
+		{sprints.length === 1 ? " sprint" : " sprints"}. Each entry links to the notes and posts I
+		published that day.
+	</p>
+	{entries.length > 0 ? (
+		<Timeline entries={entries} notes={notes} posts={posts} />
+	) : (
+		<p class="opacity-80">No journal entries yet.</p>
+	)}
+</JournalLayout>

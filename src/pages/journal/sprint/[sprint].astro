@@ -1,0 +1,45 @@
+---
+import type { GetStaticPaths } from "astro";
+import Timeline from "@/components/journal/Timeline.astro";
+import { getJournalData, getJournalSprints, type JournalSprint } from "@/data/journal";
+import JournalLayout from "@/layouts/Journal.astro";
+import { getFormattedDate } from "@/utils/date";
+
+export const getStaticPaths = (async () => {
+	const { entries } = await getJournalData();
+	return getJournalSprints(entries).map((sprint) => ({
+		params: { sprint: `${sprint.sprint}` },
+		props: { sprint },
+	}));
+}) satisfies GetStaticPaths;
+
+interface Props {
+	sprint: JournalSprint;
+}
+
+const { sprint } = Astro.props;
+const { notes, posts } = await getJournalData();
+const count = sprint.entries.length;
+
+const meta = {
+	description: `Journal entries from sprint ${sprint.sprint}`,
+	title: `Journal: Sprint ${sprint.sprint}`,
+};
+---
+
+<JournalLayout currentSprint={sprint.sprint} meta={meta}>
+	<h1 class="title mb-3">Sprint {sprint.sprint}</h1>
+	<p class="text-muted mb-10">
+		{count}
+		{count === 1 ? "entry" : "entries"}, {getFormattedDate(sprint.start)}
+		{sprint.start.valueOf() !== sprint.end.valueOf() && `– ${getFormattedDate(sprint.end)}`} ·
+		<a class="cactus-link" href={`/graph/?focus=${encodeURIComponent(sprint.key)}`}>
+			See it in the graph
+		</a>
+		·
+		<a class="cactus-link" href="/journal/">
+			Whole journal
+		</a>
+	</p>
+	<Timeline entries={sprint.entries} notes={notes} posts={posts} />
+</JournalLayout>

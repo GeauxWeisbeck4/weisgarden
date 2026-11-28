@@ -1,6 +1,6 @@
 /** Client-side loader for /garden.json, shared by the graph panel, graph page and link previews */
 
-export type GardenKind = "note" | "post";
+export type GardenKind = "note" | "post" | "journal";
 
 export interface GardenSectionData {
 	key: string;
@@ -16,6 +16,12 @@ export interface GardenTagData {
 	url?: string;
 }
 
+export interface GardenSprintData {
+	key: string;
+	name: string;
+	url: string;
+}
+
 export interface GardenNodeData {
 	key: string;
 	kind: GardenKind;
@@ -23,6 +29,8 @@ export interface GardenNodeData {
 	url: string;
 	section: string;
 	tags: string[];
+	/** journal entries only: the key of their sprint */
+	sprint?: string;
 	date: string;
 	description: string;
 	excerpt: string;
@@ -32,11 +40,12 @@ export interface GardenNodeData {
 export interface GardenData {
 	sections: GardenSectionData[];
 	tags: GardenTagData[];
+	sprints: GardenSprintData[];
 	nodes: GardenNodeData[];
 	links: { source: string; target: string }[];
 }
 
-const EMPTY: GardenData = { sections: [], tags: [], nodes: [], links: [] };
+const EMPTY: GardenData = { sections: [], tags: [], sprints: [], nodes: [], links: [] };
 
 let promise: Promise<GardenData> | undefined;
 
@@ -45,6 +54,8 @@ export function loadGarden(): Promise<GardenData> {
 		document.querySelector<HTMLMetaElement>('meta[name="garden-data"]')?.content ?? "/garden.json";
 	promise ??= fetch(url)
 		.then((r) => (r.ok ? (r.json() as Promise<GardenData>) : EMPTY))
+		// an older cached garden.json may not have sprints yet
+		.then((d) => ({ ...d, sprints: d.sprints ?? [] }))
 		.catch(() => EMPTY);
 	return promise;
 }

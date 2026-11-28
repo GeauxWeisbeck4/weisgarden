@@ -1,0 +1,93 @@
+---
+import type { CollectionEntry } from "astro:content";
+import FormattedDate from "@/components/FormattedDate.astro";
+import { getJournalLinks, type JournalEntry, journalUrl, sprintUrl } from "@/data/journal";
+import { getFormattedDate } from "@/utils/date";
+
+interface Props {
+	/** newest first */
+	entries: JournalEntry[];
+	notes: CollectionEntry<"note">[];
+	posts: CollectionEntry<"post">[];
+}
+
+const { entries, notes, posts } = Astro.props;
+
+const monthLabel = (d: Date) => getFormattedDate(d, { day: undefined, month: "long" });
+const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
+
+// group consecutive entries under a month marker
+const months = Map.groupBy(entries, (e) => monthLabel(e.data.date));
+---
+
+<ol class="journal-timeline" role="list">
+	{[...months].map(([month, items]) => (
+		<li>
+			<h2 class="journal-month">{month}</h2>
+			<ol class="space-y-6" role="list">
+				{items.map((entry) => {
+					const day = getJournalLinks(entry, notes, posts);
+					return (
+						<li class="journal-item">
+							<span aria-hidden="true" class="journal-dot" />
+							<article class="bg-note-bg/60 hover:bg-note-bg/30 rounded-lg p-4 transition-colors duration-200 motion-reduce:transition-none">
+								<div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+									<FormattedDate
+										class="text-muted font-semibold"
+										date={entry.data.date}
+										dateTimeOptions={{ weekday: "short" }}
+									/>
+									<a class="journal-badge" href={sprintUrl(entry.data.sprint)}>
+										Sprint {entry.data.sprint}
+									</a>
+								</div>
+								<h3 class="mt-2 text-lg font-semibold">
+									<a class="cactus-link" href={journalUrl(entry.id)}>
+										{entry.data.title}
+									</a>
+								</h3>
+								{entry.data.description && <p class="mt-2">{entry.data.description}</p>}
+								{day.notes.length + day.posts.length > 0 && (
+									<p class="text-muted mt-2 text-xs">
+										Linked:{" "}
+										{[
+											day.notes.length > 0 && plural(day.notes.length, "note"),
+											day.posts.length > 0 && plural(day.posts.length, "post"),
+										]
+											.filter(Boolean)
+											.join(" · ")}
+									</p>
+								)}
+							</article>
+						</li>
+					);
+				})}
+			</ol>
+		</li>
+	))}
+</ol>
+
+<style>
+	@reference "../../styles/global.css";
+
+	.journal-timeline {
+		@apply border-accent/40 ms-2 space-y-10 border-s-2 ps-6;
+	}
+	.journal-month {
+		@apply text-accent-2 relative mb-4 text-sm font-bold tracking-widest uppercase;
+	}
+	/* a bar across the line marks the start of each month */
+	.journal-month::before {
+		@apply bg-accent/40 absolute -start-7 top-1/2 h-0.5 w-4;
+		content: "";
+	}
+	.journal-item {
+		@apply relative;
+	}
+	.journal-dot {
+		@apply border-accent bg-global-bg absolute -start-[1.95rem] top-5 h-3.5 w-3.5 rounded-full border-2;
+	}
+	.journal-badge {
+		@apply bg-accent/15 text-accent rounded px-1.5 py-0.5 text-xs font-semibold hover:underline;
+	}
+</style>

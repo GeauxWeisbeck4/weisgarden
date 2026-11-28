@@ -1,0 +1,58 @@
+---
+import type { JournalSprint } from "@/data/journal";
+import { getFormattedDate } from "@/utils/date";
+
+interface Props {
+	sprints: JournalSprint[];
+	/** highlights the sprint currently being viewed */
+	current?: number | undefined;
+}
+
+const { sprints, current } = Astro.props;
+const short = (d: Date) => getFormattedDate(d, { year: undefined });
+const range = (s: JournalSprint) =>
+	s.start.valueOf() === s.end.valueOf()
+		? getFormattedDate(s.start)
+		: `${short(s.start)} – ${getFormattedDate(s.end)}`;
+---
+
+{sprints.length > 0 && (
+	<nav aria-labelledby="sprint-list-heading">
+		<h2 id="sprint-list-heading" class="title mb-4 flex items-center gap-1 text-lg">
+			<svg
+				aria-hidden="true"
+				class="h-6 w-6"
+				fill="none"
+				stroke="var(--color-muted)"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				stroke-width="1.5"
+				viewBox="0 0 24 24"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<path d="M0 0h24v24H0z" fill="none" stroke="none" />
+				<path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
+				<path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
+			</svg>
+			Sprints
+		</h2>
+		<ul class="space-y-2" role="list">
+			{sprints.map((s) => {
+				const isCurrent = s.sprint === current;
+				return (
+					<li>
+						<a
+							aria-current={isCurrent ? "page" : undefined}
+							class:list={["hover:text-link block", { "text-accent font-semibold": isCurrent }]}
+							href={s.url}
+						>
+							Sprint {s.sprint} ({s.entries.length})
+							<span class="sr-only">{s.entries.length === 1 ? "entry" : "entries"}</span>
+							<span class="text-muted block text-xs font-normal">{range(s)}</span>
+						</a>
+					</li>
+				);
+			})}
+		</ul>
+	</nav>
+)}

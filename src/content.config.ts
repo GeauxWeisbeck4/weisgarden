@@ -1,4 +1,4 @@
-import { defineCollection } from "astro:content";
+import { defineCollection, reference } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 
@@ -53,6 +53,38 @@ const note = defineCollection({
 	}),
 });
 
+/** A calendar day, kept as local midnight so it lines up with posts and notes from the same day.
+ *  Accepts "2026-11-01" (quoted or not) or anything `new Date()` understands. */
+const calendarDay = z
+	.string()
+	.or(z.date())
+	.transform((val) => {
+		if (val instanceof Date) {
+			// YAML parses an unquoted 2026-11-01 as UTC midnight
+			return new Date(val.getUTCFullYear(), val.getUTCMonth(), val.getUTCDate());
+		}
+		const ymd = val.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+		if (!ymd) return new Date(val);
+		const [, y, m, d] = ymd.map(Number) as [number, number, number, number];
+		return new Date(y, m - 1, d);
+	});
+
+const journal = defineCollection({
+	loader: glob({ base: "./src/content/journal", pattern: "**/*.{md,mdx}" }),
+	schema: baseSchema.extend({
+		/** the day this entry is about */
+		date: calendarDay,
+		/** the sprint this entry belongs to */
+		sprint: z.number().int().positive(),
+		description: z.string().optional(),
+		draft: z.boolean().default(false),
+		tags: z.array(z.string()).default([]).transform(removeDupsAndLowerCase),
+		/** extra notes/posts to link, on top of the ones published on the same day */
+		notes: z.array(reference("note")).default([]),
+		posts: z.array(reference("post")).default([]),
+	}),
+});
+
 const tag = defineCollection({
 	loader: glob({ base: "./src/content/tags", pattern: "**/*.{md,mdx}" }),
 	schema: z.object({
@@ -61,4 +93,4 @@ const tag = defineCollection({
 	}),
 });
 
-export const collections = { post, note, tag };
+export const collections = { post, note, journal, tag };

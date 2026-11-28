@@ -1,39 +1,179 @@
 ---
+import { Icon } from "astro-icon/components";
+import { experience, profile, projects, skills, socialLinks } from "@/data/profile";
 import PageLayout from "@/layouts/Base.astro";
 
 const meta = {
-	description:
-		"35 year old full stack developer with a passion for building web applications and exploring new technologies.",
-	title: "About Andrew",
+	description: `${profile.name}, ${profile.title} in ${profile.location}. ${profile.tagline}`,
+	title: `About ${profile.name.split(" ")[0]}`,
 };
+
+const githubProfile = socialLinks.find((s) => s.name === "GitHub")?.url;
 ---
 
-<PageLayout meta={meta}>
-	<h1 class="title mb-12">About Andrew</h1>
-	<div class="prose prose-sm prose-cactus max-w-none">
-		<p>
-			Hi, I’m Andrew, a 35-year-old full stack developer with a passion for building web
-			applications and exploring new technologies.
-		</p>
-		<p>Here are some things I like:</p>
-		<ul class="list-inside list-disc" role="list">
-			<li>Building Web Applications</li>
-			<li>Software Design and Development</li>
-			<li>
-				Nebraska Cornhuskers, Kansas City Royals, New England Patriots, and Carolina Hurricanes
-			</li>
-			<li>Reading Science Fiction</li>
-			<li>Writing - that is why I created this site!</li>
-			<li>Entrepreneurship</li>
-			<li>Learning and teaching others</li>
+<PageLayout meta={meta} wide>
+	<!-- Hero: photo + who I am on the left, work experience on the right -->
+	<section aria-labelledby="profile-name" class="grid gap-10 lg:grid-cols-[18rem_minmax(0,1fr)]">
+		<div class="flex flex-col items-center text-center lg:items-start lg:text-start">
+			<img
+				alt={profile.imageAlt}
+				class="border-accent/40 aspect-square w-56 rounded-2xl border-2 object-cover shadow-lg lg:w-full"
+				decoding="async"
+				height="400"
+				src={profile.image}
+				width="400"
+			/>
+			<h1 class="title mt-6 text-3xl" id="profile-name">{profile.name}</h1>
+			<p class="text-accent-2 mt-1 text-lg font-semibold">{profile.title}</p>
+			<p class="text-muted mt-1 flex items-center gap-1 text-sm">
+				<Icon aria-hidden="true" class="h-4 w-4" focusable="false" name="mdi:map-marker" />
+				{profile.location}
+			</p>
+			<p class="mt-4 text-sm opacity-90">{profile.tagline}</p>
+			<ul aria-label="Social media" class="mt-5 flex flex-wrap gap-3">
+				{
+					socialLinks.map((s) => (
+						<li>
+							<a
+								class="social-link"
+								href={s.url}
+								rel={`noreferrer ${s.rel ?? ""}`.trim()}
+								target="_blank"
+								title={s.name}
+							>
+								<Icon aria-hidden="true" class="h-5 w-5" focusable="false" name={s.icon} />
+								<span class="sr-only">{s.name}</span>
+							</a>
+						</li>
+					))
+				}
+			</ul>
+		</div>
+
+		<div>
+			<h2 class="text-accent mb-4 text-xl font-semibold">Experience</h2>
+			<ol class="space-y-4" role="list">
+				{
+					experience.map((job) => (
+						<li>
+							<article class="profile-card">
+								<div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+									<h3 class="text-lg font-semibold">{job.role}</h3>
+									<span class="text-muted text-sm whitespace-nowrap">{job.period}</span>
+								</div>
+								<p class="text-accent-2 text-sm font-semibold">
+									{job.url ? (
+										<a class="cactus-link" href={job.url} rel="noreferrer" target="_blank">
+											{job.company}
+										</a>
+									) : (
+										job.company
+									)}
+								</p>
+								<p class="mt-2 text-sm">{job.summary}</p>
+							</article>
+						</li>
+					))
+				}
+			</ol>
+		</div>
+	</section>
+
+	<!-- Skills -->
+	<section aria-labelledby="skills-heading" class="mt-20">
+		<h2 class="text-accent mb-6 text-xl font-semibold" id="skills-heading">Skills</h2>
+		<ul class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4" role="list">
+			{
+				skills.map((skill) => {
+					const level = Math.max(0, Math.min(100, Math.round(skill.level)));
+					return (
+						<li class="profile-card flex flex-col items-center text-center">
+							<Icon
+								aria-hidden="true"
+								class="h-12 w-12"
+								focusable="false"
+								name={skill.icon}
+								style={skill.color ? `color: ${skill.color}` : undefined}
+							/>
+							<h3 class="mt-3 font-semibold">{skill.name}</h3>
+							<div
+								aria-label={`${skill.name} skill level`}
+								aria-valuemax="100"
+								aria-valuemin="0"
+								aria-valuenow={level}
+								class="bg-global-bg/80 mt-3 h-2 w-full overflow-hidden rounded-full"
+								role="progressbar"
+							>
+								<div class="bg-accent h-full rounded-full" style={`width: ${level}%`} />
+							</div>
+							<p class="mt-2 flex w-full justify-between text-xs tabular-nums">
+								<span class="opacity-80">{(level / 10).toFixed(1)} / 10</span>
+								<span class="font-semibold">{level}%</span>
+							</p>
+						</li>
+					);
+				})
+			}
 		</ul>
-		<p>
-			Check out the <a
-				class="cactus-link inline-block"
-				href="https://github.com/geauxweisbeck4/weisgarden"
-				rel="noreferrer"
-				target="_blank">repo</a
-			> if you want to report an issue or contribute!
-		</p>
-	</div>
+	</section>
+
+	<!-- GitHub projects -->
+	<section aria-labelledby="projects-heading" class="mt-20">
+		<div class="mb-6 flex flex-wrap items-baseline justify-between gap-4">
+			<h2 class="text-accent text-xl font-semibold" id="projects-heading">GitHub Projects</h2>
+			{
+				githubProfile && (
+					<a class="hover:text-link text-sm" href={githubProfile} rel="noreferrer" target="_blank">
+						All repositories <span aria-hidden="true">→</span>
+					</a>
+				)
+			}
+		</div>
+		<ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" role="list">
+			{
+				projects.map((repo) => (
+					<li>
+						<a
+							class="profile-card group flex h-full flex-col"
+							href={repo.url}
+							rel="noreferrer"
+							target="_blank"
+						>
+							<span class="flex items-center gap-2">
+								<Icon aria-hidden="true" class="h-5 w-5 shrink-0" focusable="false" name="logos/github" />
+								<span class="text-accent-2 font-semibold break-all group-hover:underline">
+									{repo.name}
+								</span>
+							</span>
+							<span class="mt-2 grow text-sm opacity-90">{repo.description}</span>
+							<span class="text-muted mt-3 flex items-center gap-4 text-xs">
+								{repo.language && (
+									<span class="flex items-center gap-1">
+										<span aria-hidden="true" class="bg-accent inline-block h-2 w-2 rounded-full" />
+										{repo.language}
+									</span>
+								)}
+								<span class="flex items-center gap-1">
+									<Icon aria-hidden="true" class="h-3.5 w-3.5" focusable="false" name="mdi:star-outline" />
+									{repo.stars}
+									<span class="sr-only">stars</span>
+								</span>
+							</span>
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</section>
 </PageLayout>
+
+<style>
+	@reference "../styles/global.css";
+
+	.profile-card {
+		@apply bg-note-bg hover:bg-note-bg/40 rounded-lg p-5 transition-colors duration-200 motion-reduce:transition-none;
+	}
+	.social-link {
+		@apply border-accent/40 hover:bg-accent/15 hover:text-accent flex h-10 w-10 items-center justify-center rounded-full border transition-colors;
+	}
+</style>

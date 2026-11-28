@@ -1,21 +1,41 @@
 /**
  * <garden-graph variant="mini|full">
  *
- * Force-directed graph of every note and post in the garden. Contains an <svg data-svg> and,
- * optionally, `input[data-opt]` checkboxes (notes, posts, sections, tags, local) that toggle what's shown.
+ * Force-directed graph of every note, post and journal entry in the garden. Contains an <svg data-svg>
+ * and, optionally, `input[data-opt]` checkboxes (notes, posts, journal, sections, sprints, tags, local)
+ * that toggle what's shown.
  *
  * - `mini`: compact, laid out instantly, labels on hover, focuses the page you're on
  * - `full`: animated, labels always on, focus comes from `?focus=<key>`
  */
-import { type GardenData, type GardenNodeData, loadGarden, normalisePath } from "./garden-data";
+import {
+	type GardenData,
+	type GardenKind,
+	type GardenNodeData,
+	loadGarden,
+	normalisePath,
+} from "./garden-data";
 
-type Shape = "note" | "post" | "section" | "tag";
-type EdgeType = "link" | "section" | "tag";
+type Shape = GardenKind | "section" | "sprint" | "tag";
+type EdgeType = "link" | "section" | "sprint" | "tag";
+
+/** hubs that group other nodes, drawn hollow */
+const isHub = (shape: Shape) => shape === "section" || shape === "sprint";
+const isEntry = (shape: Shape) => shape === "note" || shape === "post" || shape === "journal";
+
+/** points for a regular polygon of radius r, first point straight up */
+const polygon = (sides: number, r: number) =>
+	Array.from({ length: sides }, (_, i) => {
+		const a = -Math.PI / 2 + (i * 2 * Math.PI) / sides;
+		return `${(Math.cos(a) * r).toFixed(2)},${(Math.sin(a) * r).toFixed(2)}`;
+	}).join(" ");
 
 export interface GardenGraphOptions {
 	notes: boolean;
 	posts: boolean;
+	journal: boolean;
 	sections: boolean;
+	sprints: boolean;
 	tags: boolean;
 	/** only show the neighbourhood of the focused node */
 	local: boolean;
@@ -83,7 +103,9 @@ export class GardenGraph extends HTMLElement {
 	options: GardenGraphOptions = {
 		notes: true,
 		posts: true,
+		journal: true,
 		sections: true,
+		sprints: true,
 		tags: false,
 		local: false,
 	};
@@ -153,7 +175,9 @@ export class GardenGraph extends HTMLElement {
 		if (explicit) {
 			// old /notes/graph/?focus=<note id> links
 			const key = explicit.includes(":") ? explicit : `note:${explicit}`;
-			return [...data.nodes, ...data.sections, ...data.tags].some((n) => n.key === key)
+			return [...data.nodes, ...data.sections, ...data.sprints, ...data.tags].some(
+				(n) => n.key === key,
+			)
 				? key
 				: undefined;
 		}
@@ -161,7 +185,9 @@ export class GardenGraph extends HTMLElement {
 		const here = normalisePath(location.pathname);
 		return (
 			data.nodes.find((n) => normalisePath(n.url) === here)?.key ??
-			data.sections.find((s) => s.kind === "note" && normalisePath(s.url) === here)?.key ??
+			data.sprints.find((s) => normalisePath(s.url) === here)?.key ??
+			// every post section shares /posts/, so only note and journal sections have their own page
+			data.sections.find((s) => s.kind !== "post" && normalisePath(s.url) === here)?.key ??
 			data.tags.find((t) => t.url && here.startsWith(normalisePath(t.url)))?.key
 		);
 	}
@@ -204,7 +230,12 @@ export class GardenGraph extends HTMLElement {
 			return node;
 		};
 
-		const entries = data.nodes.filter((n) => (n.kind === "note" ? o.notes : o.posts));
+		const showKind: Record<GardenKind, boolean> = {
+			note: o.notes,
+			post: o.posts,
+			journal: o.journal,
+		};
+		const entries = data.nodes.filter((n) => showKind[n.kind]);
 		for (const n of entries) makeNode(n.key, n.title, n.kind, sectionColor.get(n.section), n.url);
 
 		for (const l of data.links) {
@@ -232,8 +263,16 @@ export class GardenGraph extends HTMLElement {
 		if (o.sections) {
 			for (const s of data.sections) {
 				const members = entries.filter((n) => n.section === s.key);
-				const label = `${s.name} ${s.kind === "note" ? "notes" : "posts"}`;
+				const label =
+					s.kind === "journal" ? s.name : `${s.name} ${s.kind === "note" ? "notes" : "posts"}`;
 				addHub(s.key, label, "section", s.color, s.url, members, "section", 1);
+			}
+		}
+		if (o.sprints) {
+			const journalColor = data.sections.find((s) => s.kind === "journal")?.color;
+			for (const s of data.sprints) {
+				const members = entries.filter((n) => n.sprint === s.key);
+				addHub(s.key, s.name, "sprint", journalColor, s.url, members, "sprint", 1);
 			}
 		}
 		if (o.tags) {
@@ -260,10 +299,10 @@ export class GardenGraph extends HTMLElement {
 		for (const n of this.#nodes) {
 			const d = Math.min(degree.get(n) ?? 0, 6);
 			if (this.#mini) {
-				n.r = n.shape === "section" ? 4.5 : n.shape === "tag" ? 3 : 3.5 + d * 0.6;
+				n.r = isHub(n.shape) ? 4.5 : n.shape === "tag" ? 3 : 3.5 + d * 0.6;
 				if (n.key === this.focusKey) n.r += 2;
 			} else {
-				n.r = n.shape === "section" ? 9 : n.shape === "tag" ? 5.5 : 6 + d * 1.4;
+				n.r = isHub(n.shape) ? 9 : n.shape === "tag" ? 5.5 : 6 + d * 1.4;
 			}
 		}
 
@@ -284,7 +323,7 @@ export class GardenGraph extends HTMLElement {
 				bubbles: true,
 				detail: {
 					focus: focus && { key: focus.key, label: focus.label, url: focus.url },
-					nodes: this.#nodes.filter((n) => n.shape === "note" || n.shape === "post").length,
+					nodes: this.#nodes.filter((n) => isEntry(n.shape)).length,
 					links: this.#edges.filter((e) => e.type === "link").length,
 					options: { ...this.options },
 				},
@@ -341,12 +380,16 @@ export class GardenGraph extends HTMLElement {
 					rx: n.shape === "tag" ? "1" : String(s * 0.22),
 					transform: n.shape === "tag" ? "rotate(45)" : "",
 				});
+			} else if (n.shape === "journal") {
+				mark = svgEl("polygon", { points: polygon(3, n.r * 1.25) });
+			} else if (n.shape === "sprint") {
+				mark = svgEl("polygon", { points: polygon(6, n.r * 1.1) });
 			} else {
 				mark = svgEl("circle", { r: String(n.r) });
 			}
 			mark.classList.add("g-mark");
-			mark.style.fill = n.shape === "section" ? "var(--color-global-bg)" : color;
-			if (n.shape === "section") mark.style.stroke = color;
+			mark.style.fill = isHub(n.shape) ? "var(--color-global-bg)" : color;
+			if (isHub(n.shape)) mark.style.stroke = color;
 
 			const text = svgEl(
 				"text",
@@ -396,8 +439,9 @@ export class GardenGraph extends HTMLElement {
 			const dx = e.b.x - e.a.x;
 			const dy = e.b.y - e.a.y;
 			const d = Math.sqrt(dx * dx + dy * dy) || 1;
-			const rest = e.type === "link" ? 100 : e.type === "section" ? 60 : 80;
-			const k = (e.type === "link" ? 0.06 : e.type === "section" ? 0.04 : 0.025) * alpha;
+			const hub = e.type === "section" || e.type === "sprint";
+			const rest = e.type === "link" ? 100 : hub ? 60 : 80;
+			const k = (e.type === "link" ? 0.06 : hub ? 0.04 : 0.025) * alpha;
 			const f = (d - rest) * k;
 			const fx = (dx / d) * f;
 			const fy = (dy / d) * f;

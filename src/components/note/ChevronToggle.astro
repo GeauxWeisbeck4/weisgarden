@@ -1,0 +1,60 @@
+---
+interface Props {
+	/** id of the element this button shows/hides */
+	controls: string;
+	/** accessible label, e.g. "Show notes in Seedlings" */
+	label: string;
+	expanded?: boolean;
+	class?: string;
+}
+
+const { controls, label, expanded = false, class: className } = Astro.props;
+---
+
+<button
+	aria-controls={controls}
+	aria-expanded={expanded ? "true" : "false"}
+	aria-label={label}
+	class:list={["chevron-toggle", className]}
+	data-chevron-toggle
+	type="button"
+>
+	<svg
+		aria-hidden="true"
+		class="h-4 w-4"
+		fill="none"
+		stroke="currentColor"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+		stroke-width="2"
+		viewBox="0 0 24 24"
+	>
+		<path d="M9 6l6 6l-6 6"></path>
+	</svg>
+</button>
+
+<script>
+	for (const button of document.querySelectorAll<HTMLButtonElement>("[data-chevron-toggle]")) {
+		button.addEventListener("click", () => {
+			const target = document.getElementById(button.getAttribute("aria-controls") ?? "");
+			if (!target) return;
+			const expanded = button.getAttribute("aria-expanded") === "true";
+			button.setAttribute("aria-expanded", String(!expanded));
+			target.hidden = expanded;
+		});
+	}
+</script>
+
+<style>
+	@reference "../../styles/global.css";
+
+	.chevron-toggle {
+		@apply text-accent hover:bg-accent/15 flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded;
+	}
+	.chevron-toggle svg {
+		@apply transition-transform duration-200 motion-reduce:transition-none;
+	}
+	.chevron-toggle[aria-expanded="true"] svg {
+		@apply rotate-90;
+	}
+</style>
