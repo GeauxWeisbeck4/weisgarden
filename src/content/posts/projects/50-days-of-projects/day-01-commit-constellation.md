@@ -17,7 +17,17 @@ Sounds like a pretty useful and interesting idea that Claude AI helped me genera
 
 All of my projects are going to follow a standardized work flow so I can get in the habit of doing things the way they are done in the real world. The first step I took before anything else is to set up the [project repository template](https://github.com/geauxweisbeck4/day-NN-project-slug), which is worth pulling up and taking a look at. [^1]
 
+1. Setup a template: [day-nn-project-slug](day-nn-project-slug.md) to standardize the process for setting up a project
+2. Setup story cards in Asana and GitHub projects so I could plan how to tackle project.
+3. Worked with Claude on any questions I had during setup
 
+## Developing App
+
+So this is where all the heavy lifting occurred. I worked through each card and completed the stories one after another with the help of Claude in the process.
+
+## Conclusion
+
+The project conclusion will be completed and updated when I finish the project and add it to my Daily Dev website and create the final post. This is just preliminary content for updating WeisGarden for development of v1.0.0.
 
 
 
